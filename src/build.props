@@ -27,4 +27,7 @@
     <Optimize>true</Optimize>
     <DefineConstants>TRACE;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MsBuildThisFileDirectory)build\CommonAssemblyInfo.cs" />
+  </ItemGroup>
 </Project>
