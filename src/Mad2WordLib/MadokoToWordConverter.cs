@@ -9,10 +9,10 @@ namespace Mad2WordLib
 {
     public class MadokoToWordConverter
     {
-        public static void Convert()
+        public static void Convert(string outputPath)
         {
             using (WordprocessingDocument wordDocument =
-                WordprocessingDocument.Create("test.docx", WordprocessingDocumentType.Document))
+                WordprocessingDocument.Create(outputPath, WordprocessingDocumentType.Document))
             {
                 MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
 

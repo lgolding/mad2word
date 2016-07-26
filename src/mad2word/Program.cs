@@ -6,17 +6,29 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using CommandLine;
 using Mad2WordLib;
 
 namespace Mad2Word
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             Banner();
 
-            MadokoToWordConverter.Convert();
+            return Parser.Default.ParseArguments<CommandLineOptions>(args)
+                .MapResult(
+                    options => Run(options),
+                    err => 1);
+
+        }
+
+        private static int Run(CommandLineOptions options)
+        {
+            MadokoToWordConverter.Convert(options.OutputPath);
+
+            return 0;
         }
 
         private static void Banner()
