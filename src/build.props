@@ -30,4 +30,11 @@
   <ItemGroup>
     <Compile Include="$(MsBuildThisFileDirectory)build\CommonAssemblyInfo.cs" />
   </ItemGroup>
+
+  <Target BeforeTargets="PrepareForBuild" Name="CreateVersionConstantsFile">
+    <Exec Command="powershell -ExecutionPolicy RemoteSigned $(MsBuildThisFileDirectory)build\New-VersionConstantsFile.ps1 $(IntermediateOutputPath) $(AssemblyName)" />
+    <ItemGroup>
+      <Compile Include="$(IntermediateOutputPath)VersionConstants.cs" />
+    </ItemGroup>
+  </Target>
 </Project>
