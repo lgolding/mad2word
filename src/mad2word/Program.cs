@@ -17,11 +17,18 @@ namespace Mad2Word
         {
             Banner();
 
-            return Parser.Default.ParseArguments<CommandLineOptions>(args)
-                .MapResult(
-                    options => Run(options),
-                    err => 1);
-
+            try
+            {
+                return Parser.Default.ParseArguments<CommandLineOptions>(args)
+                    .MapResult(
+                        options => Run(options),
+                        err => 1);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+                return 1;
+            }
         }
 
         private static int Run(CommandLineOptions options)
