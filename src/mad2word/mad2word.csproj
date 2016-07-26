@@ -4,8 +4,8 @@
   <PropertyGroup>
     <ProjectGuid>{46F3FA26-282A-437A-8342-3FEAF0F0B748}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Mad2word</RootNamespace>
-    <AssemblyName>Mad2word</AssemblyName>
+    <RootNamespace>Mad2Word</RootNamespace>
+    <AssemblyName>Mad2Word</AssemblyName>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.props))\build.props" />
   <ItemGroup>
@@ -21,9 +21,20 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
