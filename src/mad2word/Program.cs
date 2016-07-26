@@ -1,5 +1,5 @@
-﻿// Licensed under the MIT License.
-// See the LICENSE file in the project root for license information.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License. See the LICENSE file in the project root for license information.
 
 using System;
 using System.Collections.Generic;
@@ -15,8 +15,6 @@ namespace Mad2Word
     {
         static int Main(string[] args)
         {
-            Banner();
-
             try
             {
                 return Parser.Default.ParseArguments<CommandLineOptions>(args)
@@ -33,6 +31,8 @@ namespace Mad2Word
 
         private static int Run(CommandLineOptions options)
         {
+            Banner();
+
             MadokoToWordConverter.Convert(options.InputPath, options.OutputPath);
 
             return 0;
@@ -48,7 +48,11 @@ namespace Mad2Word
 
             string version = entryAssembly.GetName().Version.ToString();
 
+            var copyrightAttribute = attributes.Single(a => a is AssemblyCopyrightAttribute) as AssemblyCopyrightAttribute;
+            string copyright = copyrightAttribute.Copyright;
+
             Console.WriteLine(string.Format(CultureInfo.CurrentCulture, Resources.Banner, programName, version));
+            Console.WriteLine(copyright);
             Console.WriteLine();
         }
     }
