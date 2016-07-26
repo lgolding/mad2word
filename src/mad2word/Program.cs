@@ -26,7 +26,7 @@ namespace Mad2Word
 
         private static int Run(CommandLineOptions options)
         {
-            MadokoToWordConverter.Convert(options.OutputPath);
+            MadokoToWordConverter.Convert(options.InputPath, options.OutputPath);
 
             return 0;
         }

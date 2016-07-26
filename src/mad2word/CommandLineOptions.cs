@@ -8,9 +8,16 @@ namespace Mad2Word
     public class CommandLineOptions
     {
         [Option(
+            'i',
+            "input-path",
+            HelpText = "Input Madoko document file path",
+            Required = true)]
+        public string InputPath { get; set; }
+
+        [Option(
             'o',
             "output-path",
-            HelpText = "Output document file path",
+            HelpText = "Output word processing document file path",
             Required = true)]
         public string OutputPath { get; set; }
     }
