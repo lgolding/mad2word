@@ -20,12 +20,16 @@ namespace Mad2WordLib
 
                 mainPart.Document = new Document();
                 Body body = mainPart.Document.AppendChild(new Body());
+                Paragraph para = body.AppendChild(new Paragraph());
 
                 using (var reader = new StreamReader(File.OpenRead(inputPath)))
                 {
-                    Paragraph para = body.AppendChild(new Paragraph());
-                    Run run = para.AppendChild(new Run());
-                    run.AppendChild(new Text("Hello, MadokoToWordConverter!"));
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        Run run = para.AppendChild(new Run());
+                        run.AppendChild(new Text(line));
+                    }
                 }
             }
         }
