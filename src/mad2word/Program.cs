@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using Mad2WordLib;
 
 namespace Mad2Word
 {
@@ -14,6 +15,8 @@ namespace Mad2Word
         static void Main(string[] args)
         {
             Banner();
+
+            MadokoToWordConverter.Convert();
         }
 
         private static void Banner()

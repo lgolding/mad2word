@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{9292277F
 		build\New-VersionConstantsFile.ps1 = build\New-VersionConstantsFile.ps1
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mad2WordLib", "Mad2WordLib\Mad2WordLib.csproj", "{C5498884-D9AC-4A1F-8FEB-E89D05D65FA9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,10 @@ Global
 		{46F3FA26-282A-437A-8342-3FEAF0F0B748}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46F3FA26-282A-437A-8342-3FEAF0F0B748}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46F3FA26-282A-437A-8342-3FEAF0F0B748}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5498884-D9AC-4A1F-8FEB-E89D05D65FA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5498884-D9AC-4A1F-8FEB-E89D05D65FA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5498884-D9AC-4A1F-8FEB-E89D05D65FA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5498884-D9AC-4A1F-8FEB-E89D05D65FA9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
