@@ -9,6 +9,12 @@ namespace Mad2WordLib.UnitTests
     public class MadokoHeadingTests
     {
         [Fact]
+        public void MadokoHeading_IgnoresNonLeadingHashCharacters()
+        {
+            MadokoHeading.CreateFrom("Heading #1").Should().BeNull();
+        }
+
+        [Fact]
         public void MadokoHeading_ReturnsNullOnInvalidHeading()
         {
             MadokoHeading.CreateFrom("Heading 1").Should().BeNull();

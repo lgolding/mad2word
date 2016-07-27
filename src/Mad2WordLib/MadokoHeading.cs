@@ -7,7 +7,7 @@ namespace Mad2WordLib
 {
     internal class MadokoHeading
     {
-        private static readonly Regex s_headingPattern = new Regex(@"(?<level>#+)\s*(?<text>[^{]*)", RegexOptions.Compiled);
+        private static readonly Regex s_headingPattern = new Regex(@"^(?<level>#+)\s*(?<text>[^{]*)", RegexOptions.Compiled);
 
         internal static MadokoHeading CreateFrom(string line)
         {
