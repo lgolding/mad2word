@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See the LICENSE file in the project root for license information.
 
-using System;
+using System.Globalization;
 using System.IO;
-using DocumentFormat.OpenXml;
+using System.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 
@@ -27,6 +27,9 @@ namespace Mad2WordLib
                 WordprocessingDocument.Open(outputPath, true))
             {
                 Body body = wordDocument.MainDocumentPart.Document.Body;
+
+                // If the template document already contains an empty paragraph, remove it.
+                body.RemoveAllChildren();
 
                 using (var reader = new StreamReader(File.OpenRead(inputPath)))
                 {
@@ -60,7 +63,10 @@ namespace Mad2WordLib
         {
             MadokoHeading madokoHeading = MadokoHeading.CreateFrom(line);
 
+            string styleId = "Heading" + madokoHeading.Level.ToString(CultureInfo.InvariantCulture);
+
             Paragraph heading = body.AppendChild(new Paragraph());
+            heading.ParagraphProperties = new ParagraphProperties(new ParagraphStyleId() { Val = styleId });
             Run run = heading.AppendChild(new Run());
             run.AppendChild(new Text(madokoHeading.Text));
         }
