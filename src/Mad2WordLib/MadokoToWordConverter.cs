@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See the LICENSE file in the project root for license information.
 
 using System.IO;
+using System.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -71,17 +72,29 @@ namespace Mad2WordLib
             }
         }
 
-        private static Run[] ConvertLineToRuns(string line)
+        internal static Run[] ConvertLineToRuns(string line)
         {
-            Run run = new Run();
-            run.AppendChild(
-                new Text
-                {
-                    Text = line,
-                    Space = SpaceProcessingModeValues.Preserve
-                });
+            MadokoRun[] madokoRuns = MadokoLine.Parse(line);
+            return madokoRuns.Select(ConvertMadokoRunToRun).ToArray();
+        }
 
-            return new[] { run };
+        private static Run ConvertMadokoRunToRun(MadokoRun madokoRun)
+        {
+            Text text = new Text
+            {
+                Text = madokoRun.Text,
+                Space = SpaceProcessingModeValues.Preserve
+            };
+
+            var run = new Run();
+            if (madokoRun.RunType == MadokoRunType.Code)
+            {
+                run.SetStyle(StyleNames.CodeChar);
+            }
+
+            run.Append(text);
+
+            return run;
         }
 
         private static void AddHeading(string line, Body body)

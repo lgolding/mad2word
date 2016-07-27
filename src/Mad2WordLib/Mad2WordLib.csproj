@@ -29,6 +29,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MadokoHeading.cs" />
+    <Compile Include="MadokoLine.cs" />
+    <Compile Include="MadokoRun.cs" />
+    <Compile Include="MadokoRunType.cs" />
     <Compile Include="MadokoToWordConverter.cs" />
     <Compile Include="ParagraphExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -38,6 +41,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RunExtensions.cs" />
+    <Compile Include="StyleNames.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

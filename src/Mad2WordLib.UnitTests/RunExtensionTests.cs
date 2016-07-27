@@ -12,7 +12,7 @@ namespace Mad2WordLib.UnitTests
         [Fact]
         public void Run_SetsStyle()
         {
-            const string StyleId = "CodeChar";
+            const string StyleId = StyleNames.CodeChar;
 
             var r = new Run();
             r.SetStyle(StyleId);
