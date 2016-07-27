@@ -35,7 +35,8 @@ namespace Mad2WordLib
 
                     while ((line = reader.ReadLine()) != null)
                     {
-                        if (IsHeading(line))
+                        var madokoHeading = MadokoHeading.CreateFrom(line);
+                        if (madokoHeading != null)
                         {
                             AddHeading(line, body);
                             para = null;
@@ -62,11 +63,6 @@ namespace Mad2WordLib
             Paragraph heading = body.AppendChild(new Paragraph());
             Run run = heading.AppendChild(new Run());
             run.AppendChild(new Text(madokoHeading.Text));
-        }
-
-        private static bool IsHeading(string line)
-        {
-            return line.StartsWith("#");
         }
     }
 }

@@ -1,33 +1,34 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See the LICENSE file in the project root for license information.
 
-using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Mad2WordLib
 {
     internal class MadokoHeading
     {
-        internal static MadokoHeading CreateFrom(string line)
-        {
-            return new MadokoHeading(line);
-        }
-
         private static readonly Regex s_headingPattern = new Regex(@"(?<level>#+)\s*(?<text>[^{]*)", RegexOptions.Compiled);
 
-        private MadokoHeading(string line)
+        internal static MadokoHeading CreateFrom(string line)
         {
+            MadokoHeading madokoHeading = null;
+
             Match match = s_headingPattern.Match(line);
             if (match.Success)
             {
-                Level = match.Groups["level"].Value.Length;
-                Text = match.Groups["text"].Value.Trim();
+                int level = match.Groups["level"].Value.Length;
+                string text = match.Groups["text"].Value.Trim();
+
+                madokoHeading = new MadokoHeading(level, text);
             }
-            else
-            {
-                Level = 1;
-                Text = string.Format(CultureInfo.CurrentCulture, Resources.ErrorInvalidHeading, line);
-            }
+
+            return madokoHeading;
+        }
+
+        private MadokoHeading(int level, string text)
+        {
+            Level = level;
+            Text = text;
         }
 
         internal int Level { get; }

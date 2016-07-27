@@ -59,14 +59,5 @@ namespace Mad2WordLib {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid heading: &quot;{0}&quot;..
-        /// </summary>
-        internal static string ErrorInvalidHeading {
-            get {
-                return ResourceManager.GetString("ErrorInvalidHeading", resourceCulture);
-            }
-        }
     }
 }
