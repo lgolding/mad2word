@@ -63,17 +63,25 @@ namespace Mad2WordLib
                                 line = " " + line;
                             }
 
-                            Run run = para.AppendChild(new Run());
-                            run.AppendChild(
-                                new Text
-                                {
-                                    Text = line,
-                                    Space = SpaceProcessingModeValues.Preserve
-                                });
+                            Run[] runs = ConvertLineToRuns(line);
+                            para.Append(runs);
                         }
                     }
                 }
             }
+        }
+
+        private static Run[] ConvertLineToRuns(string line)
+        {
+            Run run = new Run();
+            run.AppendChild(
+                new Text
+                {
+                    Text = line,
+                    Space = SpaceProcessingModeValues.Preserve
+                });
+
+            return new[] { run };
         }
 
         private static void AddHeading(string line, Body body)
