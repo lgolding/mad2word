@@ -33,7 +33,7 @@ namespace Mad2Word
         {
             Banner();
 
-            MadokoToWordConverter.Convert(options.InputPath, options.OutputPath);
+            MadokoToWordConverter.Convert(options.InputPath, options.TemplatePath, options.OutputPath);
 
             return 0;
         }

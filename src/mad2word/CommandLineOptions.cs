@@ -15,6 +15,13 @@ namespace Mad2Word
         public string InputPath { get; set; }
 
         [Option(
+            't',
+            "template-path",
+            HelpText = "Template file path",
+            Required = true)]
+        public string TemplatePath { get; set; }
+
+        [Option(
             'o',
             "output-path",
             HelpText = "Output word processing document file path",
