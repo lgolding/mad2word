@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See the LICENSE file in the project root for license information.
 
 using System.IO;
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 
@@ -33,24 +34,42 @@ namespace Mad2WordLib
                 {
                     string line;
                     Paragraph para = null;
+                    MadokoHeading madokoHeading = null;
 
                     while ((line = reader.ReadLine()) != null)
                     {
-                        var madokoHeading = MadokoHeading.CreateFrom(line);
-                        if (madokoHeading != null)
+                        if (string.IsNullOrWhiteSpace(line))
                         {
+                            para = null;
+                        }
+                        else if ((madokoHeading = MadokoHeading.CreateFrom(line)) != null)
+                        { 
                             AddHeading(line, body);
                             para = null;
                         }
                         else
                         {
+                            line = line.Trim();
+
                             if (para == null)
                             {
                                 para = body.AppendChild(new Paragraph());
                             }
+                            else
+                            {
+                                // This paragraph is continued from the preceding source line,
+                                // so make sure there's a blank space between the end of that
+                                // line and the start of this one.
+                                line = " " + line;
+                            }
 
                             Run run = para.AppendChild(new Run());
-                            run.AppendChild(new Text(line));
+                            run.AppendChild(
+                                new Text
+                                {
+                                    Text = line,
+                                    Space = SpaceProcessingModeValues.Preserve
+                                });
                         }
                     }
                 }
