@@ -3,7 +3,7 @@
 
 namespace Mad2WordLib
 {
-    internal enum MadokoRunType
+    public enum MadokoRunType
     {
         PlainText = 0,
         Code

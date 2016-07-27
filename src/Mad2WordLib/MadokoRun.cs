@@ -3,15 +3,15 @@
 
 namespace Mad2WordLib
 {
-    internal class MadokoRun
+    public class MadokoRun
     {
-        internal MadokoRun(MadokoRunType runType, string text)
+        public MadokoRun(MadokoRunType runType, string text)
         {
             RunType = runType;
             Text = text;
         }
 
-        internal MadokoRunType RunType { get; }
-        internal string Text { get; }
+        public MadokoRunType RunType { get; }
+        public string Text { get; }
     }
 }

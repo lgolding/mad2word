@@ -18,19 +18,43 @@ namespace Mad2WordLib
 
         public static MadokoDocument Read(TextReader reader)
         {
-            var madokoDocument = new MadokoDocument();
+            var document = new MadokoDocument();
 
             string line;
+            MadokoBlock block = null;
             while ((line = reader.ReadLine()) != null)
             {
-                var madokoHeader = MadokoHeading.CreateFrom(line);
-                if (madokoHeader != null)
+                if (string.IsNullOrWhiteSpace(line))
                 {
-                    madokoDocument.Blocks.Add(madokoHeader);
+                    block = null;
+                }
+                else if ((block = MadokoHeading.CreateFrom(line)) != null)
+                {
+                    document.Blocks.Add(block);
+                }
+                else
+                {
+                    line = line.Trim();
+
+                    if (block == null)
+                    {
+                        block = new MadokoBlock();
+                        document.Blocks.Add(block);
+                    }
+                    else
+                    {
+                        // This paragraph is continued from the preceding source line,
+                        // so make sure there's a blank space between the end of that
+                        // line and the start of this one.
+                        line = " " + line;
+                    }
+
+                    MadokoRun[] runs = MadokoLine.Parse(line);
+                    block.Runs.AddRange(runs);
                 }
             }
 
-            return madokoDocument;
+            return document;
         }
 
         private MadokoDocument()
