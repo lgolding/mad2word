@@ -16,7 +16,7 @@ namespace Mad2WordLib
             string templatePath,
             string outputPath)
         {
-            var madokoDocument = MadokoDocument.Open(inputPath);
+            var madokoDocument = MadokoDocument.Read(inputPath);
 
             if (File.Exists(outputPath))
             {

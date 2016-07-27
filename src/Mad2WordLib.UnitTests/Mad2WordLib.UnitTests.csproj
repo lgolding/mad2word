@@ -52,6 +52,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MadokoDocumentTests.cs" />
     <Compile Include="MadokoHeadingTests.cs" />
     <Compile Include="MadokoToWordConverterTests.cs" />
     <Compile Include="ParagraphExtensionsTests.cs" />

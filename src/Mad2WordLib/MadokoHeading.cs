@@ -5,11 +5,11 @@ using System.Text.RegularExpressions;
 
 namespace Mad2WordLib
 {
-    internal class MadokoHeading
+    public class MadokoHeading : MadokoBlock
     {
         private static readonly Regex s_headingPattern = new Regex(@"^(?<level>#+)\s*(?<text>[^{]*)", RegexOptions.Compiled);
 
-        internal static MadokoHeading CreateFrom(string line)
+        public static MadokoHeading CreateFrom(string line)
         {
             MadokoHeading madokoHeading = null;
 
