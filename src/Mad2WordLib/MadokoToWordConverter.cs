@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See the LICENSE file in the project root for license information.
 
-using System.IO;
 using System.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
@@ -11,20 +10,8 @@ namespace Mad2WordLib
 {
     public class MadokoToWordConverter
     {
-        public static void Convert(
-            string inputPath,
-            string templatePath,
-            string outputPath)
+        public static void Convert(MadokoDocument madokoDocument, string outputPath)
         {
-            if (File.Exists(outputPath))
-            {
-                File.Delete(outputPath);
-            }
-
-            File.Copy(templatePath, outputPath);
-
-            var madokoDocument = MadokoDocument.Read(inputPath);
-
             using (WordprocessingDocument wordDocument =
                 WordprocessingDocument.Open(outputPath, true))
             {
@@ -38,7 +25,8 @@ namespace Mad2WordLib
                     var madokoHeading = madokoBlock as MadokoHeading;
                     if (madokoHeading != null)
                     {
-                        AddHeading(madokoHeading, body);
+                        Paragraph para = ConvertMadokoHeadingToParagraph(madokoHeading);
+                        body.AppendChild(para);
                     }
                     else
                     {
@@ -79,12 +67,6 @@ namespace Mad2WordLib
             run.Append(text);
 
             return run;
-        }
-
-        private static void AddHeading(MadokoHeading madokoHeading, Body body)
-        {
-            body.AppendChild(
-                ConvertMadokoHeadingToParagraph(madokoHeading));
         }
     }
 }

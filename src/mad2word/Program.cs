@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using CommandLine;
@@ -33,7 +34,17 @@ namespace Mad2Word
         {
             Banner();
 
-            MadokoToWordConverter.Convert(options.InputPath, options.TemplatePath, options.OutputPath);
+            if (File.Exists(options.OutputPath))
+            {
+                File.Delete(options.OutputPath);
+            }
+
+            File.Copy(options.TemplatePath, options.OutputPath);
+
+            var madokoDocument = MadokoDocument.Read(options.InputPath);
+
+
+            MadokoToWordConverter.Convert(madokoDocument, options.OutputPath);
 
             return 0;
         }
