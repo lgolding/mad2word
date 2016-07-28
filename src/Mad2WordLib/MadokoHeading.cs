@@ -28,7 +28,7 @@ namespace Mad2WordLib
         private MadokoHeading(int level, string text)
         {
             Level = level;
-            Runs.Add(new MadokoRun(MadokoRunType.PlainText, text));
+            Runs.AddRange(MadokoLine.Parse(text));
         }
 
         internal int Level { get; }

@@ -38,6 +38,20 @@ namespace Mad2WordLib.UnitTests
             SingleRunTestCase("# Heading 1  { #heading-1 }", 1, "Heading 1");
         }
 
+        [Fact]
+        public void MadokoHeading_SupportsRunFormatting()
+        {
+            const string Line = "## `runs` property";
+
+            MadokoHeading madokoHeading = MadokoHeading.CreateFrom(Line);
+
+            madokoHeading.Level.Should().Be(2);
+            madokoHeading.Runs[0].RunType.Should().Be(MadokoRunType.Code);
+            madokoHeading.Runs[0].Text.Should().Be("runs");
+            madokoHeading.Runs[1].RunType.Should().Be(MadokoRunType.PlainText);
+            madokoHeading.Runs[1].Text.Should().Be(" property");
+        }
+
         private void SingleRunTestCase(string line, int expectedLevel, string expectedText)
         {
             MadokoHeading madokoHeading = MadokoHeading.CreateFrom(line);
