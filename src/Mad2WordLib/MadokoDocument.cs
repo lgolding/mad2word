@@ -24,11 +24,11 @@ namespace Mad2WordLib
             MadokoHeading heading = null;
             MadokoBulletListItem bulletListItem = null;
 
-            string[] lines = ReadAllLines(reader, fileSystem);
+            var lineSource = new LineSource(reader, fileSystem);
 
-            for (int i = 0; i < lines.Length; ++i)
+            while (lineSource.MoreLines)
             {
-                string line = lines[i];
+                string line = lineSource.GetNextLine();
                 if (string.IsNullOrWhiteSpace(line))
                 {
                     block = null;
@@ -66,46 +66,6 @@ namespace Mad2WordLib
             }
 
             return document;
-        }
-
-        internal static string[] ReadAllLines(
-            TextReader reader,
-            IFileSystem fileSystem)
-        {
-            var lines = new List<string>();
-
-            ReadAllLines(reader, lines, fileSystem);
-            
-            return lines.ToArray();
-        }
-
-        private static void ReadAllLines(
-            TextReader reader,
-            List<string> lines,
-            IFileSystem fileSystem)
-        {
-            string line;
-            while ((line = reader.ReadLine()) != null)
-            {
-                var includeDirective = IncludeDirective.CreateFrom(line);
-                if (includeDirective != null)
-                {
-                    string path = includeDirective.Path;
-                    if (string.IsNullOrEmpty(Path.GetExtension(path)))
-                    {
-                        path = Path.ChangeExtension(path, "mdk"); 
-                    }
-
-                    using (TextReader innerReader = fileSystem.OpenText(path))
-                    {
-                        ReadAllLines(innerReader, lines, fileSystem);
-                    }
-                }
-                else
-                {
-                    lines.Add(line);
-                }
-            }
         }
 
         private MadokoDocument()

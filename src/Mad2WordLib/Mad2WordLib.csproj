@@ -32,6 +32,7 @@
     <Compile Include="IFileSystem.cs" />
     <Compile Include="IMadokoVisitor.cs" />
     <Compile Include="IncludeDirective.cs" />
+    <Compile Include="LineSource.cs" />
     <Compile Include="MadokoBlock.cs" />
     <Compile Include="MadokoBulletListItem.cs" />
     <Compile Include="MadokoBulletType.cs" />
