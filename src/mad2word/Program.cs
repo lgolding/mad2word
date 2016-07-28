@@ -41,7 +41,8 @@ namespace Mad2Word
 
             File.Copy(options.TemplatePath, options.OutputPath);
 
-            var madokoDocument = MadokoDocument.Read(options.InputPath);
+            IFileSystem fileSystem = new FileSystem();
+            var madokoDocument = MadokoDocument.Read(options.InputPath, fileSystem);
 
             MadokoToWordConverter.Convert(madokoDocument, options.OutputPath);
 

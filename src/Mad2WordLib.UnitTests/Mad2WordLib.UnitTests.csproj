@@ -52,6 +52,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FakeFileSystem.cs" />
     <Compile Include="MadokoDocumentTests.cs" />
     <Compile Include="MadokoHeadingTests.cs" />
     <Compile Include="MadokoLineTests.cs" />
