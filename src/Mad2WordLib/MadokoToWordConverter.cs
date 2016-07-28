@@ -49,6 +49,13 @@ namespace Mad2WordLib
             }
         }
 
+        private static Paragraph ConvertMadokoHeadingToParagraph(MadokoHeading madokoHeading)
+        {
+            Paragraph heading = ConvertMadokoBlockToParagraph(madokoHeading);
+            heading.SetHeadingLevel(madokoHeading.Level);
+            return heading;
+        }
+
         internal static Paragraph ConvertMadokoBlockToParagraph(MadokoBlock madokoBlock)
         {
             Run[] runs = madokoBlock.Runs.Select(ConvertMadokoRunToRun).ToArray();
@@ -76,11 +83,8 @@ namespace Mad2WordLib
 
         private static void AddHeading(MadokoHeading madokoHeading, Body body)
         {
-            Paragraph heading = body.AppendChild(new Paragraph());
-            heading.SetHeadingLevel(madokoHeading.Level);
-
-            Run run = heading.AppendChild(new Run());
-            run.AppendChild(new Text(madokoHeading.Text));
+            body.AppendChild(
+                ConvertMadokoHeadingToParagraph(madokoHeading));
         }
     }
 }

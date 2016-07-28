@@ -23,27 +23,28 @@ namespace Mad2WordLib.UnitTests
         [Fact]
         public void MadokoHeading_ParsesLevel1Heading()
         {
-            RunTestCase("# Heading 1", 1, "Heading 1");
+            SingleRunTestCase("# Heading 1", 1, "Heading 1");
         }
 
         [Fact]
         public void MadokoHeading_TrimsHeadingText()
         {
-            RunTestCase("# Heading 1  ", 1, "Heading 1");
+            SingleRunTestCase("# Heading 1  ", 1, "Heading 1");
         }
 
         [Fact]
         public void MadokoHeading_StopsAtOpenCurlyBrace()
         {
-            RunTestCase("# Heading 1  { #heading-1 }", 1, "Heading 1");
+            SingleRunTestCase("# Heading 1  { #heading-1 }", 1, "Heading 1");
         }
 
-        private void RunTestCase(string line, int expectedLevel, string expectedText)
+        private void SingleRunTestCase(string line, int expectedLevel, string expectedText)
         {
             MadokoHeading madokoHeading = MadokoHeading.CreateFrom(line);
 
             madokoHeading.Level.Should().Be(expectedLevel);
-            madokoHeading.Text.Should().Be(expectedText);
+            madokoHeading.Runs[0].RunType.Should().Be(MadokoRunType.PlainText);
+            madokoHeading.Runs[0].Text.Should().Be(expectedText);
         }
     }
 }
