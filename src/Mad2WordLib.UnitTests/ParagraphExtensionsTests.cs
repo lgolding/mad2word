@@ -9,7 +9,7 @@ namespace Mad2WordLib.UnitTests
 {
     public class ParagraphExtensionsTests
     {
-        [Fact]
+        [Fact(DisplayName = nameof(Paragraph_SetsStyle))]
         public void Paragraph_SetsStyle()
         {
             const string StyleId = "CustomStyle";
@@ -20,7 +20,7 @@ namespace Mad2WordLib.UnitTests
             p.ParagraphProperties.ParagraphStyleId.Val.Value.Should().Be(StyleId);
         }
 
-        [Fact]
+        [Fact(DisplayName = nameof(Paragraph_SetsHeadingLevel))]
         public void Paragraph_SetsHeadingLevel()
         {
             const int Level = 2;

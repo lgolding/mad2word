@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Mad2WordLib
 {
-    public class MadokoBlock
+    public class MadokoBlock : MadokoNode
     {
         public MadokoBlock()
         {
@@ -13,5 +13,10 @@ namespace Mad2WordLib
         }
 
         public List<MadokoRun> Runs { get; }
+
+        public override void Accept(IMadokoVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }

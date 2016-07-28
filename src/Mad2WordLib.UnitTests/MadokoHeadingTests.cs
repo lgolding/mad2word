@@ -8,37 +8,43 @@ namespace Mad2WordLib.UnitTests
 {
     public class MadokoHeadingTests
     {
-        [Fact]
+        [Fact(DisplayName = nameof(MadokoHeading_IgnoresNonLeadingHashCharacters))]
         public void MadokoHeading_IgnoresNonLeadingHashCharacters()
         {
             MadokoHeading.CreateFrom("Heading #1").Should().BeNull();
         }
 
-        [Fact]
+        [Fact(DisplayName = nameof(MadokoHeading_ReturnsNullOnInvalidHeading))]
         public void MadokoHeading_ReturnsNullOnInvalidHeading()
         {
             MadokoHeading.CreateFrom("Heading 1").Should().BeNull();
         }
 
-        [Fact]
+        [Fact(DisplayName = nameof(MadokoHeading_ParsesLevel1Heading))]
         public void MadokoHeading_ParsesLevel1Heading()
         {
             SingleRunTestCase("# Heading 1", 1, "Heading 1");
         }
 
-        [Fact]
+        [Fact(DisplayName = nameof(MadokoHeading_ParsesLevel2Heading))]
+        public void MadokoHeading_ParsesLevel2Heading()
+        {
+            SingleRunTestCase("## Heading 2", 2, "Heading 2");
+        }
+
+        [Fact(DisplayName = nameof(MadokoHeading_TrimsHeadingText))]
         public void MadokoHeading_TrimsHeadingText()
         {
             SingleRunTestCase("# Heading 1  ", 1, "Heading 1");
         }
 
-        [Fact]
+        [Fact(DisplayName = nameof(MadokoHeading_StopsAtOpenCurlyBrace))]
         public void MadokoHeading_StopsAtOpenCurlyBrace()
         {
             SingleRunTestCase("# Heading 1  { #heading-1 }", 1, "Heading 1");
         }
 
-        [Fact]
+        [Fact(DisplayName = nameof(MadokoHeading_SupportsRunFormatting))]
         public void MadokoHeading_SupportsRunFormatting()
         {
             const string Line = "## `runs` property";

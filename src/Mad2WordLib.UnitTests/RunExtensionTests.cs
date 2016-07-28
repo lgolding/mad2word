@@ -9,7 +9,7 @@ namespace Mad2WordLib.UnitTests
 {
     public class RunExtensionTests
     {
-        [Fact]
+        [Fact(DisplayName = nameof(Run_SetsStyle))]
         public void Run_SetsStyle()
         {
             const string StyleId = StyleNames.CodeChar;

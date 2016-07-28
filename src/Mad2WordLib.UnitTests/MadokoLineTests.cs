@@ -8,7 +8,7 @@ namespace Mad2WordLib.UnitTests
 {
     public class MadokoLineTests
     {
-        [Fact]
+        [Fact(DisplayName = nameof(MadokoLine_ConvertsInlineCodeFragments))]
         public void MadokoLine_ConvertsInlineCodeFragments()
         {
             const string Line = "Here is some `code` and some `more code`.";
@@ -28,7 +28,7 @@ namespace Mad2WordLib.UnitTests
             runs[4].Text.Should().Be(".");
         }
 
-        [Fact]
+        [Fact(DisplayName = nameof(MadokoLine_ConvertsLineStartingWithCodeFragment))]
         public void MadokoLine_ConvertsLineStartingWithCodeFragment()
         {
             const string Line = "`string` is a type.";
@@ -42,7 +42,7 @@ namespace Mad2WordLib.UnitTests
             runs[1].Text.Should().Be(" is a type.");
         }
 
-        [Fact]
+        [Fact(DisplayName = nameof(MadokoLine_ConvertsLineWithOnlyCodeFragment))]
         public void MadokoLine_ConvertsLineWithOnlyCodeFragment()
         {
             const string Line = "`function a()`";
@@ -54,7 +54,7 @@ namespace Mad2WordLib.UnitTests
             runs[0].Text.Should().Be("function a()");
         }
 
-        [Fact]
+        [Fact(DisplayName = nameof(MadokoLine_ParsesEntities))]
         public void MadokoLine_ParsesEntities()
         {
             const string Line = "See &sect;1.1 and &sect;1.2.";

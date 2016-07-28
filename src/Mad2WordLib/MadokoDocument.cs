@@ -20,9 +20,11 @@ namespace Mad2WordLib
         {
             var document = new MadokoDocument();
 
-            string line;
             MadokoBlock block = null;
             MadokoHeading heading = null;
+            MadokoBulletListItem bulletListItem = null;
+
+            string line;
             while ((line = reader.ReadLine()) != null)
             {
                 if (string.IsNullOrWhiteSpace(line))
@@ -32,6 +34,10 @@ namespace Mad2WordLib
                 else if ((heading = MadokoHeading.CreateFrom(line)) != null)
                 {
                     document.Blocks.Add(heading);
+                }
+                else if ((bulletListItem = MadokoBulletListItem.CreateFrom(line)) != null)
+                {
+                    document.Blocks.Add(bulletListItem);
                 }
                 else
                 {

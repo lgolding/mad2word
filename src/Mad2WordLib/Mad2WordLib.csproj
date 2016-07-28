@@ -28,10 +28,14 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IMadokoVisitor.cs" />
     <Compile Include="MadokoBlock.cs" />
+    <Compile Include="MadokoBulletListItem.cs" />
+    <Compile Include="MadokoBulletType.cs" />
     <Compile Include="MadokoDocument.cs" />
     <Compile Include="MadokoHeading.cs" />
     <Compile Include="MadokoLine.cs" />
+    <Compile Include="MadokoNode.cs" />
     <Compile Include="MadokoRun.cs" />
     <Compile Include="MadokoRunType.cs" />
     <Compile Include="MadokoToWordConverter.cs" />
@@ -44,6 +48,7 @@
     </Compile>
     <Compile Include="RunExtensions.cs" />
     <Compile Include="StyleNames.cs" />
+    <Compile Include="WordProcessingVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

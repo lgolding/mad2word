@@ -25,6 +25,11 @@ namespace Mad2WordLib
             return madokoHeading;
         }
 
+        public override void Accept(IMadokoVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+
         private MadokoHeading(int level, string text)
         {
             Level = level;

@@ -43,7 +43,6 @@ namespace Mad2Word
 
             var madokoDocument = MadokoDocument.Read(options.InputPath);
 
-
             MadokoToWordConverter.Convert(madokoDocument, options.OutputPath);
 
             return 0;

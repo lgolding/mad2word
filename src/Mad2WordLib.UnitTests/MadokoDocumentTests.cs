@@ -10,7 +10,7 @@ namespace Mad2WordLib.UnitTests
 {
     public class MadokoDocumentTests
     {
-        [Fact]
+        [Fact(DisplayName = nameof(MadokoDocument_ReadsHeaders))]
         public void MadokoDocument_ReadsHeaders()
         {
             const string Input = "# Chapter 1\n## Section 1.1\n# Chapter 2";
