@@ -57,13 +57,13 @@ namespace Mad2WordLib.UnitTests
         [Fact(DisplayName = nameof(MadokoLine_ParsesEntities))]
         public void MadokoLine_ParsesEntities()
         {
-            const string Line = "See &sect;1.1 and &sect;1.2.";
+            const string Line = "See &sect;1.1 &HeLLiP; &SECT;1.2.";
 
             MadokoRun[] runs = MadokoLine.Parse(Line);
 
             runs.Length.Should().Be(1);
             runs[0].RunType.Should().Be(MadokoRunType.PlainText);
-            runs[0].Text.Should().Be("See \u00a71.1 and \u00a71.2.");
+            runs[0].Text.Should().Be("See \u00a71.1 \u2026 \u00a71.2.");
         }
     }
 }

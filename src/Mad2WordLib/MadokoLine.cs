@@ -12,7 +12,8 @@ namespace Mad2WordLib
         internal static readonly ReadOnlyDictionary<string, string> s_entityDictionary = new ReadOnlyDictionary<string, string>(
             new Dictionary<string, string>
             {
-                ["sect"] = "\u00a7"
+                ["HELLIP"] = "\u2026",
+                ["SECT"] = "\u00a7"
             });
 
         internal static MadokoRun[] Parse(string line)
@@ -31,7 +32,7 @@ namespace Mad2WordLib
                     {
                         string entityName = entityBuilder.ToString();
                         string replacement;
-                        if (s_entityDictionary.TryGetValue(entityName, out replacement))
+                        if (s_entityDictionary.TryGetValue(entityName.ToUpperInvariant(), out replacement))
                         {
                             sb.Append(replacement);
                         }
