@@ -8,7 +8,7 @@ namespace Mad2WordLib
 {
     public class MadokoDocument
     {
-        public static object Read(string inputPath)
+        public static MadokoDocument Read(string inputPath)
         {
             using (var reader = new StreamReader(File.OpenRead(inputPath)))
             {
@@ -22,15 +22,16 @@ namespace Mad2WordLib
 
             string line;
             MadokoBlock block = null;
+            MadokoHeading heading = null;
             while ((line = reader.ReadLine()) != null)
             {
                 if (string.IsNullOrWhiteSpace(line))
                 {
                     block = null;
                 }
-                else if ((block = MadokoHeading.CreateFrom(line)) != null)
+                else if ((heading = MadokoHeading.CreateFrom(line)) != null)
                 {
-                    document.Blocks.Add(block);
+                    document.Blocks.Add(heading);
                 }
                 else
                 {

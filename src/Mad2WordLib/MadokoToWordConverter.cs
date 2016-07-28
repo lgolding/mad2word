@@ -16,14 +16,14 @@ namespace Mad2WordLib
             string templatePath,
             string outputPath)
         {
-            var madokoDocument = MadokoDocument.Read(inputPath);
-
             if (File.Exists(outputPath))
             {
                 File.Delete(outputPath);
             }
 
             File.Copy(templatePath, outputPath);
+
+            var madokoDocument = MadokoDocument.Read(inputPath);
 
             using (WordprocessingDocument wordDocument =
                 WordprocessingDocument.Open(outputPath, true))
@@ -33,51 +33,26 @@ namespace Mad2WordLib
                 // If the template document already contains an empty paragraph, remove it.
                 body.RemoveAllChildren();
 
-                using (var reader = new StreamReader(File.OpenRead(inputPath)))
+                foreach (MadokoBlock madokoBlock in madokoDocument.Blocks)
                 {
-                    string line;
-                    Paragraph para = null;
-                    MadokoHeading madokoHeading = null;
-
-                    while ((line = reader.ReadLine()) != null)
+                    var madokoHeading = madokoBlock as MadokoHeading;
+                    if (madokoHeading != null)
                     {
-                        if (string.IsNullOrWhiteSpace(line))
-                        {
-                            para = null;
-                        }
-                        else if ((madokoHeading = MadokoHeading.CreateFrom(line)) != null)
-                        { 
-                            AddHeading(line, body);
-                            para = null;
-                        }
-                        else
-                        {
-                            line = line.Trim();
-
-                            if (para == null)
-                            {
-                                para = body.AppendChild(new Paragraph());
-                            }
-                            else
-                            {
-                                // This paragraph is continued from the preceding source line,
-                                // so make sure there's a blank space between the end of that
-                                // line and the start of this one.
-                                line = " " + line;
-                            }
-
-                            Run[] runs = ConvertLineToRuns(line);
-                            para.Append(runs);
-                        }
+                        AddHeading(madokoHeading, body);
+                    }
+                    else
+                    {
+                        Paragraph para = ConvertMadokoBlockToParagraph(madokoBlock);
+                        body.AppendChild(para);
                     }
                 }
             }
         }
 
-        internal static Run[] ConvertLineToRuns(string line)
+        internal static Paragraph ConvertMadokoBlockToParagraph(MadokoBlock madokoBlock)
         {
-            MadokoRun[] madokoRuns = MadokoLine.Parse(line);
-            return madokoRuns.Select(ConvertMadokoRunToRun).ToArray();
+            Run[] runs = madokoBlock.Runs.Select(ConvertMadokoRunToRun).ToArray();
+            return new Paragraph(runs);
         }
 
         private static Run ConvertMadokoRunToRun(MadokoRun madokoRun)
@@ -99,10 +74,8 @@ namespace Mad2WordLib
             return run;
         }
 
-        private static void AddHeading(string line, Body body)
+        private static void AddHeading(MadokoHeading madokoHeading, Body body)
         {
-            MadokoHeading madokoHeading = MadokoHeading.CreateFrom(line);
-
             Paragraph heading = body.AppendChild(new Paragraph());
             heading.SetHeadingLevel(madokoHeading.Level);
 

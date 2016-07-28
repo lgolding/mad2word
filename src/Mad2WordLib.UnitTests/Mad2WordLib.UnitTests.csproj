@@ -54,7 +54,7 @@
   <ItemGroup>
     <Compile Include="MadokoDocumentTests.cs" />
     <Compile Include="MadokoHeadingTests.cs" />
-    <Compile Include="MadokoToWordConverterTests.cs" />
+    <Compile Include="MadokoLineTests.cs" />
     <Compile Include="ParagraphExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunExtensionTests.cs" />
