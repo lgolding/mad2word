@@ -32,6 +32,43 @@ namespace Mad2WordLib.UnitTests
             }
         }
 
+        [Fact(DisplayName = nameof(MadokoDocument_HeadingsCanSpanSourceLines))]
+        public void MadokoDocument_HeadingsCanSpanSourceLines()
+        {
+            const string Input = "# Chapter 1:\nThe beginning";
+
+            using (var reader = new StringReader(Input))
+            {
+                IFileSystem fileSystem = new FakeFileSystem();
+
+                var document = MadokoDocument.Read(reader, fileSystem);
+
+                document.Blocks.Count.Should().Be(1);
+                var heading = document.Blocks.Cast<MadokoHeading>().Single();
+                heading.Level.Should().Be(1);
+                heading.Runs[0].Text.Should().Be("Chapter 1:");
+                heading.Runs[1].Text.Should().Be(" The beginning");
+            }
+        }
+
+        [Fact(DisplayName = nameof(MadokoDocument_BulletListItemsCanSpanSourceLines))]
+        public void MadokoDocument_BulletListItemsCanSpanSourceLines()
+        {
+            const string Input = "* This is a long\nbullet list item.";
+
+            using (var reader = new StringReader(Input))
+            {
+                IFileSystem fileSystem = new FakeFileSystem();
+
+                var document = MadokoDocument.Read(reader, fileSystem);
+
+                document.Blocks.Count.Should().Be(1);
+                var bulletListItem = document.Blocks.Cast<MadokoBulletListItem>().Single();
+                bulletListItem.Runs[0].Text.Should().Be("This is a long");
+                bulletListItem.Runs[1].Text.Should().Be(" bullet list item.");
+            }
+        }
+
         [Fact(DisplayName = nameof(MadokoDocument_HandlesIncludes))]
         public void MadokoDocument_HandlesIncludes()
         {

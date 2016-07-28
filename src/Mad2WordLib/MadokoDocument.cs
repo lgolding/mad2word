@@ -36,10 +36,12 @@ namespace Mad2WordLib
                 else if ((heading = MadokoHeading.CreateFrom(line)) != null)
                 {
                     document.Blocks.Add(heading);
+                    block = heading;
                 }
                 else if ((bulletListItem = MadokoBulletListItem.CreateFrom(line)) != null)
                 {
                     document.Blocks.Add(bulletListItem);
+                    block = bulletListItem;
                 }
                 else
                 {
