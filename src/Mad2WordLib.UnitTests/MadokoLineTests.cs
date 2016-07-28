@@ -53,5 +53,17 @@ namespace Mad2WordLib.UnitTests
             runs[0].RunType.Should().Be(MadokoRunType.Code);
             runs[0].Text.Should().Be("function a()");
         }
+
+        [Fact]
+        public void MadokoLine_ParsesEntities()
+        {
+            const string Line = "See &sect;1.1 and &sect;1.2.";
+
+            MadokoRun[] runs = MadokoLine.Parse(Line);
+
+            runs.Length.Should().Be(1);
+            runs[0].RunType.Should().Be(MadokoRunType.PlainText);
+            runs[0].Text.Should().Be("See \u00a71.1 and \u00a71.2.");
+        }
     }
 }
