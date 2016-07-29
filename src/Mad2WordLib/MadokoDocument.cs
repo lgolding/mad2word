@@ -27,6 +27,8 @@ namespace Mad2WordLib
 
             var lineSource = new LineSource(reader, fileSystem);
 
+            Metadata metadata = Metadata.Read(lineSource);
+
             while (lineSource.MoreLines)
             {
                 string line = lineSource.GetNextLine();

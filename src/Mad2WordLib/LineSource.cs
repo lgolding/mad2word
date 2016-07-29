@@ -35,6 +35,18 @@ namespace Mad2WordLib
             return _lines[_currentIndex++];
         }
 
+        public void BackUp()
+        {
+            if (_currentIndex > 0)
+            {
+                --_currentIndex;
+            }
+            else
+            {
+                throw new InvalidOperationException("LineSource is already at the beginning.");
+            }
+        }
+
         private void ReadAllLines(List<string> lines, TextReader reader, IFileSystem fileSystem)
         {
             string line;

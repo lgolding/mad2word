@@ -35,7 +35,7 @@ namespace Mad2WordLib.UnitTests
         [Fact(DisplayName = nameof(MadokoDocument_HeadingsCanSpanSourceLines))]
         public void MadokoDocument_HeadingsCanSpanSourceLines()
         {
-            const string Input = "# Chapter 1:\nThe beginning";
+            const string Input = "# Chapter 1\nThe beginning";
 
             using (var reader = new StringReader(Input))
             {
@@ -46,7 +46,7 @@ namespace Mad2WordLib.UnitTests
                 document.Blocks.Count.Should().Be(1);
                 var heading = document.Blocks.Cast<MadokoHeading>().Single();
                 heading.Level.Should().Be(1);
-                heading.Runs[0].Text.Should().Be("Chapter 1:");
+                heading.Runs[0].Text.Should().Be("Chapter 1");
                 heading.Runs[1].Text.Should().Be(" The beginning");
             }
         }

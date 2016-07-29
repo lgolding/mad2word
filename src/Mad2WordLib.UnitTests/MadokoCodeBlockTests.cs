@@ -24,8 +24,8 @@ code
             codeBlock.Runs[0].Text.Should().Be("code");
         }
 
-        [Fact(DisplayName = nameof(MadokoCodeBlock_HandlesEMptyFencedBlock))]
-        public void MadokoCodeBlock_HandlesEMptyFencedBlock()
+        [Fact(DisplayName = nameof(MadokoCodeBlock_HandlesEmptyFencedBlock))]
+        public void MadokoCodeBlock_HandlesEmptyFencedBlock()
         {
             const string Input =
 @"```
