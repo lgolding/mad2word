@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See the LICENSE file in the project root for license information.
 
+using System;
 using System.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -53,21 +54,32 @@ namespace Mad2WordLib
             return new Paragraph(runs);
         }
 
+        private static readonly string[] s_lineSplitters = new string[] {Environment.NewLine };
+
         private static Run ConvertMadokoRunToRun(MadokoRun madokoRun)
         {
-            Text text = new Text
-            {
-                Text = madokoRun.Text,
-                Space = SpaceProcessingModeValues.Preserve
-            };
-
             var run = new Run();
             if (madokoRun.RunType == MadokoRunType.Code)
             {
                 run.SetStyle(StyleNames.CodeChar);
             }
 
-            run.Append(text);
+            string[] softLines = madokoRun.Text.Split(s_lineSplitters, StringSplitOptions.None);
+            for (int i = 0; i < softLines.Length; ++i)
+            {
+                Text text = new Text
+                {
+                    Text = softLines[i],
+                    Space = SpaceProcessingModeValues.Preserve
+                };
+
+                run.Append(text);
+
+                if (i < softLines.Length - 1)
+                {
+                    run.Append(new Break());
+                }
+            }
 
             return run;
         }
