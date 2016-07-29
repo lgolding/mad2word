@@ -36,6 +36,7 @@
     <Compile Include="MadokoBlock.cs" />
     <Compile Include="MadokoBulletListItem.cs" />
     <Compile Include="MadokoBulletType.cs" />
+    <Compile Include="MadokoCodeBlock.cs" />
     <Compile Include="MadokoDocument.cs" />
     <Compile Include="MadokoHeading.cs" />
     <Compile Include="MadokoLine.cs" />

@@ -5,6 +5,7 @@ namespace Mad2WordLib
 {
     internal static class StyleNames
     {
+        internal const string Code = "Code";
         internal const string CodeChar = "CodeChar";
     }
 }

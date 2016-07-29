@@ -21,6 +21,7 @@ namespace Mad2WordLib
             var document = new MadokoDocument();
 
             MadokoBlock block = null;
+            MadokoCodeBlock codeBlock = null;
             MadokoHeading heading = null;
             MadokoBulletListItem bulletListItem = null;
 
@@ -42,6 +43,11 @@ namespace Mad2WordLib
                 {
                     document.Blocks.Add(bulletListItem);
                     block = bulletListItem;
+                }
+                else if ((codeBlock = MadokoCodeBlock.CreateFrom(line, lineSource)) != null)
+                {
+                    document.Blocks.Add(codeBlock);
+                    block = codeBlock;
                 }
                 else
                 {

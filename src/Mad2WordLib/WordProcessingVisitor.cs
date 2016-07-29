@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See the LICENSE file in the project root for license information.
 
-using System;
 using System.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -23,26 +22,14 @@ namespace Mad2WordLib
             _body.AppendChild(para);
         }
 
+        public void Visit(MadokoCodeBlock codeBlock)
+        {
+            Paragraph para = ConvertMadokoBlockToParagraph(codeBlock);
+            para.SetStyle(StyleNames.Code);
+            _body.AppendChild(para);
+        }
+
         public void Visit(MadokoBulletListItem madokoBulletListItem)
-        {
-            Paragraph para = ConvertMadokoBulletListItemToParagraph(madokoBulletListItem);
-            _body.AppendChild(para);
-        }
-
-        public void Visit(MadokoHeading madokoHeading)
-        {
-            Paragraph para = ConvertMadokoHeadingToParagraph(madokoHeading);
-            _body.AppendChild(para);
-        }
-
-        private static Paragraph ConvertMadokoHeadingToParagraph(MadokoHeading madokoHeading)
-        {
-            Paragraph para = ConvertMadokoBlockToParagraph(madokoHeading);
-            para.SetHeadingLevel(madokoHeading.Level);
-            return para;
-        }
-
-        private static Paragraph ConvertMadokoBulletListItemToParagraph(MadokoBulletListItem madokoBulletListItem)
         {
             Paragraph para = ConvertMadokoBlockToParagraph(madokoBulletListItem);
             para.PrependChild(
@@ -50,7 +37,14 @@ namespace Mad2WordLib
                   new NumberingProperties(
                     new NumberingLevelReference() { Val = 0 },
                     new NumberingId() { Val = 1 })));
-            return para;
+            _body.AppendChild(para);
+        }
+
+        public void Visit(MadokoHeading madokoHeading)
+        {
+            Paragraph para = ConvertMadokoBlockToParagraph(madokoHeading);
+            para.SetHeadingLevel(madokoHeading.Level);
+            _body.AppendChild(para);
         }
 
         private static Paragraph ConvertMadokoBlockToParagraph(MadokoBlock madokoBlock)
