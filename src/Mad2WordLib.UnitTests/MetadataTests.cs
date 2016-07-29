@@ -19,6 +19,16 @@ namespace Mad2WordLib.UnitTests
             metadata.GetValue("Title").Should().Be("My Document");
         }
 
+        [Fact(DisplayName = nameof(Metadata_AcceptsCaseInsensitiveKeys))]
+        public void Metadata_AcceptsCaseInsensitiveKeys()
+        {
+            const string Input = "Title: My Document";
+
+            Metadata metadata = ReadMetadata(Input);
+
+            metadata.GetValue("TITLE").Should().Be("My Document");
+        }
+
         [Fact(DisplayName = nameof(Metadata_TrimsName))]
         public void Metadata_TrimsName()
         {

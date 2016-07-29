@@ -35,7 +35,7 @@ namespace Mad2WordLib
                 Match match = s_metadataPattern.Match(line);
                 if (match.Success)
                 {
-                    key = match.Groups["key"].Value.Trim();
+                    key = match.Groups["key"].Value.Trim().ToUpperInvariant();
                     value = match.Groups["value"].Value.Trim();
 
                     _dictionary.Add(key, value);
@@ -65,7 +65,7 @@ namespace Mad2WordLib
 
         internal string GetValue(string key)
         {
-            return _dictionary[key];
+            return _dictionary[key.ToUpperInvariant()];
         }
     }
 }
