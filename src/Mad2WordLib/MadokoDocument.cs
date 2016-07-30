@@ -20,67 +20,52 @@ namespace Mad2WordLib
         {
             var document = new MadokoDocument();
 
-            MadokoBlock block = null;
-            MadokoCodeBlock codeBlock = null;
-            MadokoHeading heading = null;
-            MadokoBulletListItem bulletListItem = null;
-
             var lineSource = new LineSource(reader, fileSystem);
+            var metadata = new Metadata(lineSource);
 
-            Metadata metadata = Metadata.Read(lineSource);
-
-            while (lineSource.MoreLines)
+            while (!lineSource.AtEnd)
             {
-                string line = lineSource.GetNextLine();
-                if (string.IsNullOrWhiteSpace(line))
+                SkipBlankLines(lineSource);
+                if (lineSource.AtEnd)
                 {
-                    block = null;
+                    break;
                 }
-                else if ((heading = MadokoHeading.CreateFrom(line)) != null)
+
+                string nextLine = lineSource.PeekLine();
+                if (MadokoHeading.MatchesLine(nextLine))
                 {
-                    document.Blocks.Add(heading);
-                    block = heading;
+                    document.Blocks.Add(new MadokoHeading(lineSource));
                 }
-                else if ((bulletListItem = MadokoBulletListItem.CreateFrom(line)) != null)
+                else if (MadokoBulletListItem.MatchesLine(nextLine))
                 {
-                    document.Blocks.Add(bulletListItem);
-                    block = bulletListItem;
+                    document.Blocks.Add(new MadokoBulletListItem(lineSource));
                 }
-                else if ((codeBlock = MadokoCodeBlock.CreateFrom(line, lineSource)) != null)
+                else if (MadokoCodeBlock.MatchesLine(nextLine))
                 {
-                    document.Blocks.Add(codeBlock);
-                    block = codeBlock;
+                    document.Blocks.Add(new MadokoCodeBlock(lineSource));
                 }
                 else
                 {
-                    line = line.Trim();
-
-                    if (block == null)
-                    {
-                        block = new MadokoBlock();
-                        document.Blocks.Add(block);
-                    }
-                    else
-                    {
-                        // This paragraph is continued from the preceding source line,
-                        // so make sure there's a blank space between the end of that
-                        // line and the start of this one.
-                        line = " " + line;
-                    }
-
-                    MadokoRun[] runs = MadokoLine.Parse(line);
-                    block.Runs.AddRange(runs);
+                    document.Blocks.Add(new MadokoBlock(lineSource));
                 }
             }
 
             return document;
         }
 
+        public List<MadokoBlock> Blocks { get; }
+
         private MadokoDocument()
         {
             Blocks = new List<MadokoBlock>();
         }
 
-        public List<MadokoBlock> Blocks { get; }
+        private static void SkipBlankLines(LineSource lineSource)
+        {
+            while (!lineSource.AtEnd && string.IsNullOrWhiteSpace(lineSource.PeekLine()))
+            {
+                lineSource.Advance();
+            }
+        }
     }
 }

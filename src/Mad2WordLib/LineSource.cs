@@ -21,7 +21,9 @@ namespace Mad2WordLib
             _lines = lines.ToArray();
         }
 
-        public bool MoreLines => _currentIndex < _lines.Length;
+        public int LineNumber => _currentIndex + 1;
+
+        public bool AtEnd => _currentIndex == _lines.Length;
 
         public string[] GetAllLines()
         {
@@ -30,9 +32,26 @@ namespace Mad2WordLib
             return allLines;
         }
 
-        public string GetNextLine()
+        public string GetLine()
         {
             return _lines[_currentIndex++];
+        }
+
+        internal string PeekLine()
+        {
+            return _lines[_currentIndex];
+        }
+
+        public void Advance()
+        {
+            if (_currentIndex < _lines.Length)
+            {
+                ++_currentIndex;
+            }
+            else
+            {
+                throw new InvalidOperationException("Unexpectedly encountered end of input.");
+            }
         }
 
         public void BackUp()
@@ -43,7 +62,7 @@ namespace Mad2WordLib
             }
             else
             {
-                throw new InvalidOperationException("LineSource is already at the beginning.");
+                throw new InvalidOperationException("Attempted to back up past the beginning of the input.");
             }
         }
 

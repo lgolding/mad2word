@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See the LICENSE file in the project root for license information.
 
+using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Mad2WordLib
@@ -9,33 +11,40 @@ namespace Mad2WordLib
     {
         private static readonly Regex s_headingPattern = new Regex(@"^(?<level>#+)\s*(?<text>[^{]*)", RegexOptions.Compiled);
 
-        public static MadokoHeading CreateFrom(string line)
+        public MadokoHeading(LineSource lineSource)
         {
-            MadokoHeading madokoHeading = null;
-
+            string line = lineSource.PeekLine();
             Match match = s_headingPattern.Match(line);
-            if (match.Success)
+            if (!match.Success)
             {
-                int level = match.Groups["level"].Value.Length;
-                string text = match.Groups["text"].Value.Trim();
-
-                madokoHeading = new MadokoHeading(level, text);
+                throw new InvalidOperationException(
+                    string.Format(
+                        CultureInfo.CurrentCulture,
+                        "Unexpected attempt to create a heading from line {0}:\n{1}",
+                        lineSource.LineNumber,
+                        line));
             }
 
-            return madokoHeading;
+            lineSource.Advance();
+
+            Level = match.Groups["level"].Value.Length;
+
+            string text = match.Groups["text"].Value.Trim();
+            Runs.AddRange(MadokoLine.Parse(text));
+
+            AppendRemainderOfParagraph(lineSource);
+        }
+
+        public int Level { get; }
+
+        public static bool MatchesLine(string line)
+        {
+            return line[0] == '#';
         }
 
         public override void Accept(IMadokoVisitor visitor)
         {
             visitor.Visit(this);
         }
-
-        private MadokoHeading(int level, string text)
-        {
-            Level = level;
-            Runs.AddRange(MadokoLine.Parse(text));
-        }
-
-        internal int Level { get; }
     };
 }

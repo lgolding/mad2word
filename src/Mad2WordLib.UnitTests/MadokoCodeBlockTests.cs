@@ -10,6 +10,19 @@ namespace Mad2WordLib.UnitTests
 {
     public class MadokoCodeBlockTests
     {
+        [Fact(DisplayName = nameof(MadokoCodeBlock_HandlesEmptyFencedBlock))]
+        public void MadokoCodeBlock_HandlesEmptyFencedBlock()
+        {
+            const string Input =
+@"```
+```";
+            MadokoCodeBlock codeBlock = MakeCodeBlock(Input);
+
+            codeBlock.Runs.Count.Should().Be(1);
+            codeBlock.Runs[0].RunType.Should().Be(MadokoRunType.PlainText);
+            codeBlock.Runs[0].Text.Should().Be(string.Empty);
+        }
+
         [Fact(DisplayName = nameof(MadokoCodeBlock_HandlesSingleLineFencedBlock))]
         public void MadokoCodeBlock_HandlesSingleLineFencedBlock()
         {
@@ -22,19 +35,6 @@ code
             codeBlock.Runs.Count.Should().Be(1);
             codeBlock.Runs[0].RunType.Should().Be(MadokoRunType.PlainText);
             codeBlock.Runs[0].Text.Should().Be("code");
-        }
-
-        [Fact(DisplayName = nameof(MadokoCodeBlock_HandlesEmptyFencedBlock))]
-        public void MadokoCodeBlock_HandlesEmptyFencedBlock()
-        {
-            const string Input =
-@"```
-```";
-            MadokoCodeBlock codeBlock = MakeCodeBlock(Input);
-
-            codeBlock.Runs.Count.Should().Be(1);
-            codeBlock.Runs[0].RunType.Should().Be(MadokoRunType.PlainText);
-            codeBlock.Runs[0].Text.Should().Be(string.Empty);
         }
 
         [Fact(DisplayName = nameof(MadokoCodeBlock_HandlesMultipleLineFencedBlock))]
@@ -74,9 +74,7 @@ code2```";
             using (TextReader reader = new StringReader(input))
             {
                 var lineSource = new LineSource(reader, fileSystem);
-                string firstLine = lineSource.GetNextLine();
-
-                codeBlock = MadokoCodeBlock.CreateFrom(firstLine, lineSource);
+                codeBlock = new MadokoCodeBlock(lineSource);
             }
 
             return codeBlock;

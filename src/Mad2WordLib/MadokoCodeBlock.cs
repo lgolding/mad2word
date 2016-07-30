@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See the LICENSE file in the project root for license information.
 
 using System;
+using System.Globalization;
 using System.Text;
 
 namespace Mad2WordLib
@@ -10,53 +11,63 @@ namespace Mad2WordLib
     {
         private const string CodeBlockFence = "```";
 
-        public static MadokoCodeBlock CreateFrom(string firstLine, LineSource lineSource)
+        public MadokoCodeBlock(LineSource lineSource)
         {
-            MadokoCodeBlock codeBlock = null;
-            if (firstLine.StartsWith(CodeBlockFence, StringComparison.Ordinal))
+            string line = lineSource.PeekLine();
+            if (!MatchesLine(line))
             {
-                codeBlock = new MadokoCodeBlock();
-                var sb = new StringBuilder();
-                bool isFirstLine = true;
-                bool isLastLine = false;
-                string line;
+                throw new InvalidOperationException(
+                    string.Format(
+                        CultureInfo.CurrentCulture,
+                        "Unexpected attempt to create a code block from line {0}:\n{1}",
+                        lineSource.LineNumber,
+                        line));
+            }
 
-                while (lineSource.MoreLines)
+            lineSource.Advance();
+
+            var sb = new StringBuilder();
+            bool isFirstLine = true;
+            bool isLastLine = false;
+
+            while (!lineSource.AtEnd)
+            {
+                line = lineSource.GetLine().TrimEnd();
+
+                int fenceIndex = line.IndexOf(CodeBlockFence, StringComparison.Ordinal);
+                if (fenceIndex != -1)
                 {
-                    line = lineSource.GetNextLine().TrimEnd();
+                    line = line.Substring(0, fenceIndex);
+                    isLastLine = true;
+                }
 
-                    int fenceIndex = line.IndexOf(CodeBlockFence, StringComparison.Ordinal);
-                    if (fenceIndex != -1)
-                    {
-                        line = line.Substring(0, fenceIndex);
-                        isLastLine = true;
-                    }
+                if (!isFirstLine && !(isLastLine && line.Length == 0))
+                {
+                    sb.Append(Environment.NewLine);
+                }
 
-                    if (!isFirstLine && !(isLastLine && line.Length == 0))
-                    {
-                        sb.Append(Environment.NewLine);
-                    }
-
-                    if (isLastLine)
-                    {
-                        if (line.Length > 0)
-                        {
-                            sb.Append(line);
-                        }
-                        break;
-                    }
-                    else
+                if (isLastLine)
+                {
+                    if (line.Length > 0)
                     {
                         sb.Append(line);
                     }
-
-                    isFirstLine = false;
+                    break;
+                }
+                else
+                {
+                    sb.Append(line);
                 }
 
-                codeBlock.Runs.Add(new MadokoRun(MadokoRunType.PlainText, sb.ToString()));
+                isFirstLine = false;
             }
 
-            return codeBlock;
+            Runs.Add(new MadokoRun(MadokoRunType.PlainText, sb.ToString()));
+        }
+
+        public static bool MatchesLine(string line)
+        {
+            return line.StartsWith(CodeBlockFence, StringComparison.Ordinal);
         }
 
         public override void Accept(IMadokoVisitor visitor)

@@ -13,19 +13,14 @@ namespace Mad2WordLib
 
         private readonly Dictionary<string, string> _dictionary = new Dictionary<string, string>();
 
-        internal static Metadata Read(LineSource lineSource)
-        {
-            return new Metadata(lineSource);
-        }
-
-        private Metadata(LineSource lineSource)
+        public Metadata(LineSource lineSource)
         {
             string key = null;
             string value;
 
-            while (lineSource.MoreLines)
+            while (!lineSource.AtEnd)
             {
-                string line = lineSource.GetNextLine();
+                string line = lineSource.GetLine();
                 if (string.IsNullOrEmpty(line))
                 {
                     key = null;

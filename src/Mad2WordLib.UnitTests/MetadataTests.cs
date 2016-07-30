@@ -138,8 +138,7 @@ Heading Base: 2
             using (TextReader reader = new StringReader(input))
             {
                 var lineSource = new LineSource(reader, fileSystem);
-
-                metadata = Metadata.Read(lineSource);
+                metadata = new Metadata(lineSource);
             }
 
             return metadata;

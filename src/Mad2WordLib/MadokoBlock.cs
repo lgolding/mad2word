@@ -12,7 +12,29 @@ namespace Mad2WordLib
             Runs = new List<MadokoRun>();
         }
 
+       public MadokoBlock(LineSource lineSource) : this()
+        {
+            AppendRemainderOfParagraph(lineSource);
+        }
+
         public List<MadokoRun> Runs { get; }
+
+        protected void AppendRemainderOfParagraph(LineSource lineSource)
+        {
+            string line;
+            while (!lineSource.AtEnd && !string.IsNullOrWhiteSpace(line = lineSource.GetLine()))
+            {
+                // This paragraph is continued from the preceding source line,
+                // so make sure there's a blank space between the end of that
+                // line and the start of this one.
+                if (!char.IsWhiteSpace(line[0]))
+                {
+                    line = " " + line;
+                }
+
+                Runs.AddRange(MadokoLine.Parse(line));
+            }
+        }
 
         public override void Accept(IMadokoVisitor visitor)
         {
