@@ -19,16 +19,5 @@ namespace Mad2WordLib.UnitTests
 
             p.ParagraphProperties.ParagraphStyleId.Val.Value.Should().Be(StyleId);
         }
-
-        [Fact(DisplayName = nameof(Paragraph_SetsHeadingLevel))]
-        public void Paragraph_SetsHeadingLevel()
-        {
-            const int Level = 2;
-
-            var p = new Paragraph();
-            p.SetHeadingLevel(Level);
-
-            p.ParagraphProperties.ParagraphStyleId.Val.Value.Should().Be("Heading2");
-        }
     }
 }

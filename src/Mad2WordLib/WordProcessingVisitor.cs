@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See the LICENSE file in the project root for license information.
 
 using System;
+using System.Globalization;
 using System.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -36,22 +37,23 @@ namespace Mad2WordLib
 
         public void Visit(MadokoCodeBlock codeBlock)
         {
-            Paragraph para = ConvertMadokoBlockToParagraph(codeBlock);
-            para.SetStyle(StyleNames.Code);
-            _body.AppendChild(para);
+            AppendStyledBlock(codeBlock, StyleIds.Code);
         }
 
         public void Visit(MadokoHeading madokoHeading)
         {
-            Paragraph para = ConvertMadokoBlockToParagraph(madokoHeading);
-            para.SetHeadingLevel(madokoHeading.Level);
-            _body.AppendChild(para);
+            AppendStyledBlock(madokoHeading, GetHeadingStyleId(madokoHeading.Level));
         }
 
         public void Visit(MadokoTitle madokoTitle)
         {
-            Paragraph para = ConvertMadokoBlockToParagraph(madokoTitle);
-            para.SetStyle(StyleNames.Title);
+            AppendStyledBlock(madokoTitle, StyleIds.Title);
+        }
+
+        private void AppendStyledBlock(MadokoBlock block, string styleId)
+        {
+            Paragraph para = ConvertMadokoBlockToParagraph(block);
+            para.SetStyle(styleId);
             _body.AppendChild(para);
         }
 
@@ -61,6 +63,11 @@ namespace Mad2WordLib
             return new Paragraph(runs);
         }
 
+        internal static string GetHeadingStyleId(int level)
+        {
+            return "Heading" + level.ToString(CultureInfo.InvariantCulture);
+        }
+
         private static readonly string[] s_lineSplitters = new string[] {Environment.NewLine };
 
         private static Run ConvertMadokoRunToRun(MadokoRun madokoRun)
@@ -68,7 +75,7 @@ namespace Mad2WordLib
             var run = new Run();
             if (madokoRun.RunType == MadokoRunType.Code)
             {
-                run.SetStyle(StyleNames.CodeChar);
+                run.SetStyle(StyleIds.CodeChar);
             }
 
             string[] softLines = madokoRun.Text.Split(s_lineSplitters, StringSplitOptions.None);

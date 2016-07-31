@@ -54,7 +54,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RunExtensions.cs" />
-    <Compile Include="StyleNames.cs" />
+    <Compile Include="StyleIds.cs" />
     <Compile Include="WordProcessingVisitor.cs" />
   </ItemGroup>
   <ItemGroup>

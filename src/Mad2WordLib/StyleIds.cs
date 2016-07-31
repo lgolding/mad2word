@@ -3,7 +3,7 @@
 
 namespace Mad2WordLib
 {
-    internal static class StyleNames
+    internal static class StyleIds
     {
         internal const string Code = "Code";
         internal const string CodeChar = "CodeChar";
