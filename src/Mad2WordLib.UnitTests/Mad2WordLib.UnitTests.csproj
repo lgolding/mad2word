@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="FakeFileSystem.cs" />
     <Compile Include="LineSourceTests.cs" />
+    <Compile Include="MadokoBlockTests.cs" />
     <Compile Include="MadokoCodeBlockTests.cs" />
     <Compile Include="MadokoHeadingTests.cs" />
     <Compile Include="MadokoLineTests.cs" />

@@ -14,6 +14,7 @@ namespace Mad2WordLib
 
        public MadokoBlock(LineSource lineSource) : this()
         {
+            Runs.AddRange(MadokoLine.Parse(lineSource.GetLine()));
             AppendRemainderOfBlock(lineSource);
         }
 

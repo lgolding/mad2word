@@ -120,7 +120,7 @@ Some thoughts
             block.GetType().Should().NotBe(typeof(MadokoHeading));
 
             block.Runs.Count.Should().Be(1);
-            block.Runs[0].Text.Should().Be(" The beginning");
+            block.Runs[0].Text.Should().Be("The beginning");
 
             blocks[2].Should().BeOfType<MadokoHeading>();
             heading = (MadokoHeading)blocks[2];
@@ -134,7 +134,7 @@ Some thoughts
             block.GetType().Should().NotBe(typeof(MadokoHeading));
 
             block.Runs.Count.Should().Be(1);
-            block.Runs[0].Text.Should().Be(" Some thoughts");
+            block.Runs[0].Text.Should().Be("Some thoughts");
 
             blocks[4].Should().BeOfType<MadokoHeading>();
             heading = (MadokoHeading)blocks[4];
