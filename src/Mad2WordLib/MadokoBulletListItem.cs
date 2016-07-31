@@ -51,7 +51,7 @@ namespace Mad2WordLib
 
             lineSource.Advance();
 
-            AppendRemainderOfParagraph(lineSource);
+            AppendRemainderOfBlock(lineSource);
         }
 
         internal MadokoBulletType BulletType { get; }

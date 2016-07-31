@@ -55,7 +55,6 @@
     <Compile Include="FakeFileSystem.cs" />
     <Compile Include="LineSourceTests.cs" />
     <Compile Include="MadokoCodeBlockTests.cs" />
-    <Compile Include="MadokoDocumentTests.cs" />
     <Compile Include="MadokoHeadingTests.cs" />
     <Compile Include="MadokoLineTests.cs" />
     <Compile Include="MadokoBulletListItemTests.cs" />

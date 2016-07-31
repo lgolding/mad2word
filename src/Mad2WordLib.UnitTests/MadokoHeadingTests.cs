@@ -3,6 +3,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using FluentAssertions;
 using Xunit;
 
@@ -62,8 +63,8 @@ namespace Mad2WordLib.UnitTests
             madokoHeading.Runs[1].Text.Should().Be(" property");
         }
 
-        [Fact(DisplayName = nameof(MadokoHeadings_CanSpanSourceLines))]
-        public void MadokoHeadings_CanSpanSourceLines()
+        [Fact(DisplayName = nameof(MadokoHeading_CannotSpanSourceLines))]
+        public void MadokoHeading_CannotSpanSourceLines()
         {
             const string Input =
 @"# Chapter 1
@@ -72,8 +73,86 @@ The beginning";
             MadokoHeading madokoHeading = MakeHeading(Input);
 
             madokoHeading.Level.Should().Be(1);
+            madokoHeading.Runs.Count.Should().Be(1);
             madokoHeading.Runs[0].Text.Should().Be("Chapter 1");
-            madokoHeading.Runs[1].Text.Should().Be(" The beginning");
+        }
+
+        [Fact(DisplayName = nameof(MadokoHeading_CanAppearOnConsecutiveLines))]
+        public void MadokoHeading_CanAppearOnConsecutiveLines()
+        {
+            const string Input =
+@"# Chapter 1
+The beginning
+## Section 1.1
+Some thoughts
+
+# Chapter 2
+# Chapter 3
+
+# Chapter 4";
+
+            MadokoDocument document;
+            using (var reader = new StringReader(Input))
+            {
+                IFileSystem fileSystem = new FakeFileSystem();
+                document = MadokoDocument.Read(reader, fileSystem);
+            }
+
+            var blocks = document.Blocks.ToList();
+            blocks.Count.Should().Be(7);
+
+            blocks[0].Should().BeOfType<MadokoHeading>();
+            var heading = (MadokoHeading)blocks[0];
+            heading.Level.Should().Be(1);
+            heading.Runs.Count.Should().Be(1);
+            heading.Runs[0].Text.Should().Be("Chapter 1");
+
+            var block = blocks[1];
+            block.GetType().Should().NotBe(typeof(MadokoHeading));
+
+            // The following test fails with an InvalidCastException: "Unable to cast
+            // object of type 'Mad2WordLib.MadokoBlock' to type 'Mad2WordLib.MadokoHeading'."
+            // This seems to be a bug in FluentAssertions.
+            //
+            //block.Should().NotBeOfType<MadokoHeading>();
+
+            // Instead, we have to write this:
+            block.GetType().Should().NotBe(typeof(MadokoHeading));
+
+            block.Runs.Count.Should().Be(1);
+            block.Runs[0].Text.Should().Be(" The beginning");
+
+            blocks[2].Should().BeOfType<MadokoHeading>();
+            heading = (MadokoHeading)blocks[2];
+            heading.Level.Should().Be(2);
+            heading.Runs.Count.Should().Be(1);
+            heading.Runs[0].Text.Should().Be("Section 1.1");
+
+            block = blocks[3];
+
+            // Again, because Should().NotBeOfType<T> fails:
+            block.GetType().Should().NotBe(typeof(MadokoHeading));
+
+            block.Runs.Count.Should().Be(1);
+            block.Runs[0].Text.Should().Be(" Some thoughts");
+
+            blocks[4].Should().BeOfType<MadokoHeading>();
+            heading = (MadokoHeading)blocks[4];
+            heading.Level.Should().Be(1);
+            heading.Runs.Count.Should().Be(1);
+            heading.Runs[0].Text.Should().Be("Chapter 2");
+
+            blocks[5].Should().BeOfType<MadokoHeading>();
+            heading = (MadokoHeading)blocks[5];
+            heading.Level.Should().Be(1);
+            heading.Runs.Count.Should().Be(1);
+            heading.Runs[0].Text.Should().Be("Chapter 3");
+
+            blocks[6].Should().BeOfType<MadokoHeading>();
+            heading = (MadokoHeading)blocks[6];
+            heading.Level.Should().Be(1);
+            heading.Runs.Count.Should().Be(1);
+            heading.Runs[0].Text.Should().Be("Chapter 4");
         }
 
         private void SingleRunTestCase(string line, int expectedLevel, string expectedText)

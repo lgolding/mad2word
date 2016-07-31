@@ -14,16 +14,18 @@ namespace Mad2WordLib
 
        public MadokoBlock(LineSource lineSource) : this()
         {
-            AppendRemainderOfParagraph(lineSource);
+            AppendRemainderOfBlock(lineSource);
         }
 
         public List<MadokoRun> Runs { get; }
 
-        protected void AppendRemainderOfParagraph(LineSource lineSource)
+        protected void AppendRemainderOfBlock(LineSource lineSource)
         {
             string line;
-            while (!lineSource.AtEnd && !string.IsNullOrWhiteSpace(line = lineSource.GetLine()))
+            while (!lineSource.AtEnd && IsContinuationLine(line = lineSource.PeekLine()))
             {
+                lineSource.Advance();
+
                 // This paragraph is continued from the preceding source line,
                 // so make sure there's a blank space between the end of that
                 // line and the start of this one.
@@ -34,6 +36,25 @@ namespace Mad2WordLib
 
                 Runs.AddRange(MadokoLine.Parse(line));
             }
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether the current line belongs to the block
+        /// being constructed.
+        /// </summary>
+        /// <param name="line">
+        /// The line being examined.
+        /// </param>
+        /// <returns>
+        /// <code>true</code> if <paramref name="line"/> belongs to the block being
+        /// constructed; otherwise <code>false</code>.
+        /// </returns>
+        /// <remarks>
+        /// Blocks end with a blank line or the start of a heading.
+        /// </remarks>
+        protected bool IsContinuationLine(string line)
+        {
+            return !string.IsNullOrWhiteSpace(line) && ! MadokoHeading.MatchesLine(line);
         }
 
         public override void Accept(IMadokoVisitor visitor)

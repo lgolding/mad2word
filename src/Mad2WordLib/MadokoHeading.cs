@@ -31,8 +31,6 @@ namespace Mad2WordLib
 
             string text = match.Groups["text"].Value.Trim();
             Runs.AddRange(MadokoLine.Parse(text));
-
-            AppendRemainderOfParagraph(lineSource);
         }
 
         public int Level { get; }

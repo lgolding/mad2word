@@ -10,7 +10,9 @@ namespace Mad2WordLib
     public class LineSource
     {
         private readonly string[] _lines;
-        private int _currentIndex;
+
+        // The index of the next line to be retrieved from the source.
+        private int _nextIndex;
 
         public LineSource(TextReader reader, IFileSystem fileSystem)
         {
@@ -21,9 +23,9 @@ namespace Mad2WordLib
             _lines = lines.ToArray();
         }
 
-        public int LineNumber => _currentIndex + 1;
+        public int LineNumber => _nextIndex + 1;
 
-        public bool AtEnd => _currentIndex == _lines.Length;
+        public bool AtEnd => _nextIndex == _lines.Length;
 
         public string[] GetAllLines()
         {
@@ -34,19 +36,19 @@ namespace Mad2WordLib
 
         public string GetLine()
         {
-            return _lines[_currentIndex++];
+            return _lines[_nextIndex++];
         }
 
         internal string PeekLine()
         {
-            return _lines[_currentIndex];
+            return _lines[_nextIndex];
         }
 
         public void Advance()
         {
-            if (_currentIndex < _lines.Length)
+            if (_nextIndex < _lines.Length)
             {
-                ++_currentIndex;
+                ++_nextIndex;
             }
             else
             {
@@ -56,9 +58,9 @@ namespace Mad2WordLib
 
         public void BackUp()
         {
-            if (_currentIndex > 0)
+            if (_nextIndex > 0)
             {
-                --_currentIndex;
+                --_nextIndex;
             }
             else
             {
