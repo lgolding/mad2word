@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -62,7 +61,7 @@ namespace Mad2Word
             var copyrightAttribute = attributes.Single(a => a is AssemblyCopyrightAttribute) as AssemblyCopyrightAttribute;
             string copyright = copyrightAttribute.Copyright;
 
-            Console.WriteLine(string.Format(CultureInfo.CurrentCulture, Resources.Banner, programName, version));
+            Console.WriteLine(StringUtil.Format(Resources.Banner, programName, version));
             Console.WriteLine(copyright);
             Console.WriteLine();
         }

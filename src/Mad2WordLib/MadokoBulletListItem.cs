@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -36,8 +35,7 @@ namespace Mad2WordLib
             if (!match.Success)
             {
                 throw new InvalidOperationException(
-                    string.Format(
-                        CultureInfo.CurrentCulture,
+                    StringUtil.Format(
                         "Unexpected attempt to create a bullet list item from line {0}:\n{1}",
                         lineSource.LineNumber,
                         line));

@@ -2,7 +2,6 @@
 // Licensed under the MIT License. See the LICENSE file in the project root for license information.
 
 using System;
-using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Mad2WordLib
@@ -18,8 +17,7 @@ namespace Mad2WordLib
             if (!match.Success)
             {
                 throw new InvalidOperationException(
-                    string.Format(
-                        CultureInfo.CurrentCulture,
+                    StringUtil.Format(
                         "Unexpected attempt to create a heading from line {0}:\n{1}",
                         lineSource.LineNumber,
                         line));
