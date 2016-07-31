@@ -23,13 +23,6 @@ namespace Mad2WordLib
             _body.AppendChild(para);
         }
 
-        public void Visit(MadokoCodeBlock codeBlock)
-        {
-            Paragraph para = ConvertMadokoBlockToParagraph(codeBlock);
-            para.SetStyle(StyleNames.Code);
-            _body.AppendChild(para);
-        }
-
         public void Visit(MadokoBulletListItem madokoBulletListItem)
         {
             Paragraph para = ConvertMadokoBlockToParagraph(madokoBulletListItem);
@@ -41,10 +34,24 @@ namespace Mad2WordLib
             _body.AppendChild(para);
         }
 
+        public void Visit(MadokoCodeBlock codeBlock)
+        {
+            Paragraph para = ConvertMadokoBlockToParagraph(codeBlock);
+            para.SetStyle(StyleNames.Code);
+            _body.AppendChild(para);
+        }
+
         public void Visit(MadokoHeading madokoHeading)
         {
             Paragraph para = ConvertMadokoBlockToParagraph(madokoHeading);
             para.SetHeadingLevel(madokoHeading.Level);
+            _body.AppendChild(para);
+        }
+
+        public void Visit(MadokoTitle madokoTitle)
+        {
+            Paragraph para = ConvertMadokoBlockToParagraph(madokoTitle);
+            para.SetStyle(StyleNames.Title);
             _body.AppendChild(para);
         }
 

@@ -6,8 +6,9 @@ namespace Mad2WordLib
     public interface IMadokoVisitor
     {
         void Visit(MadokoBlock block);
+        void Visit(MadokoBulletListItem listItem);
         void Visit(MadokoCodeBlock codeBlock);
         void Visit(MadokoHeading heading);
-        void Visit(MadokoBulletListItem listItem);
+        void Visit(MadokoTitle title);
     }
 }

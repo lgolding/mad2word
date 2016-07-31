@@ -43,6 +43,7 @@
     <Compile Include="MadokoNode.cs" />
     <Compile Include="MadokoRun.cs" />
     <Compile Include="MadokoRunType.cs" />
+    <Compile Include="MadokoTitle.cs" />
     <Compile Include="MadokoToWordConverter.cs" />
     <Compile Include="Metadata.cs" />
     <Compile Include="ParagraphExtensions.cs" />

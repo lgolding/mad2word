@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Mad2WordLib.UnitTests
 {
-    public class MadokoHeadingTests
+    public class MadokoHeadingTests : MadokoTestBase
     {
         [Fact(DisplayName = nameof(MadokoHeading_ThrowsOnNonLeadingHashCharacters))]
         public void MadokoHeading_ThrowsOnNonLeadingHashCharacters()
@@ -91,12 +91,7 @@ Some thoughts
 
 # Chapter 4";
 
-            MadokoDocument document;
-            using (var reader = new StringReader(Input))
-            {
-                IFileSystem fileSystem = new FakeFileSystem();
-                document = MadokoDocument.Read(reader, fileSystem);
-            }
+            MadokoDocument document = ReadDocument(Input);
 
             var blocks = document.Blocks.ToList();
             blocks.Count.Should().Be(7);

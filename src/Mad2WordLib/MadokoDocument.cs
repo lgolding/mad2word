@@ -44,6 +44,16 @@ namespace Mad2WordLib
                 {
                     document.Blocks.Add(new MadokoCodeBlock(lineSource));
                 }
+                else if (MadokoTitle.MatchesLine(nextLine))
+                {
+                    string title = metadata.Title;
+                    if (title != null)
+                    {
+                        document.Blocks.Add(new MadokoTitle(title));
+                    }
+
+                    lineSource.Advance();
+                }
                 else
                 {
                     document.Blocks.Add(new MadokoBlock(lineSource));

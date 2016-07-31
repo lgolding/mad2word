@@ -58,9 +58,31 @@ namespace Mad2WordLib
             }
         }
 
+        internal string Title
+        {
+            get
+            {
+                string title;
+                if (TryGetValue("title", out title))
+                {
+                    if (!string.IsNullOrWhiteSpace(title))
+                    {
+                        return title.Trim();
+                    }
+                }
+
+                return null;
+            }
+        }
+
         internal string GetValue(string key)
         {
             return _dictionary[key.ToUpperInvariant()];
+        }
+
+        internal bool TryGetValue(string key, out string value)
+        {
+            return _dictionary.TryGetValue(key.ToUpperInvariant(), out value);
         }
     }
 }

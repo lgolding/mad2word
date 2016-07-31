@@ -7,5 +7,6 @@ namespace Mad2WordLib
     {
         internal const string Code = "Code";
         internal const string CodeChar = "CodeChar";
+        internal const string Title = "Title";
     }
 }
