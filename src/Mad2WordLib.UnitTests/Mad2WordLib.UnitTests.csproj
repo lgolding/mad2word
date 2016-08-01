@@ -65,6 +65,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunExtensionTests.cs" />
     <Compile Include="MadokoTitleTests.cs" />
+    <Compile Include="WordProcessingVisitorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mad2WordLib\Mad2WordLib.csproj">
