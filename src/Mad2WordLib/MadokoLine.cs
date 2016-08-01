@@ -63,6 +63,11 @@ namespace Mad2WordLib
                                         runType = MadokoRunType.Code;
                                         break;
 
+                                    case '_':
+                                        AddRun(madokoRuns, sb, runType);
+                                        runType = MadokoRunType.Italic;
+                                        break;
+
                                     default:
                                         sb.Append(c);
                                         break;
@@ -73,6 +78,20 @@ namespace Mad2WordLib
                                 switch (c)
                                 {
                                     case '`':
+                                        AddRun(madokoRuns, sb, runType);
+                                        runType = MadokoRunType.PlainText;
+                                        break;
+
+                                    default:
+                                        sb.Append(c);
+                                        break;
+                                }
+                                break;
+
+                            case MadokoRunType.Italic:
+                                switch (c)
+                                {
+                                    case '_':
                                         AddRun(madokoRuns, sb, runType);
                                         runType = MadokoRunType.PlainText;
                                         break;

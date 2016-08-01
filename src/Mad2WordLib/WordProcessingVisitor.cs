@@ -73,9 +73,17 @@ namespace Mad2WordLib
         private static Run ConvertMadokoRunToRun(MadokoRun madokoRun)
         {
             var run = new Run();
-            if (madokoRun.RunType == MadokoRunType.Code)
+            switch (madokoRun.RunType)
             {
-                run.SetStyle(StyleIds.CodeChar);
+                case MadokoRunType.Code:
+                    run.SetStyle(StyleIds.CodeChar);
+                    break;
+
+                case MadokoRunType.Italic:
+                    break;
+
+                default:
+                    break;
             }
 
             string[] softLines = madokoRun.Text.Split(s_lineSplitters, StringSplitOptions.None);

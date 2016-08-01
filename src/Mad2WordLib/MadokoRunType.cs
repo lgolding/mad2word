@@ -6,6 +6,7 @@ namespace Mad2WordLib
     public enum MadokoRunType
     {
         PlainText = 0,
-        Code
+        Code,
+        Italic
     }
 }
