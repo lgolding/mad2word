@@ -80,53 +80,64 @@ namespace Mad2WordLib
                 var includeDirective = IncludeDirective.CreateFrom(line);
                 if (includeDirective != null)
                 {
-                    string path = includeDirective.Path;
-                    if (string.IsNullOrEmpty(Path.GetExtension(path)))
-                    {
-                        path = Path.ChangeExtension(path, "mdk");
-                    }
-
-                    var searchPaths = new List<string>();
-                    if (Path.IsPathRooted(path))
-                    {
-                        searchPaths.Add(path);
-                    }
-                    else
-                    {
-                        searchPaths.Add(Path.Combine(_environment.CurrentDirectory, path));
-
-                        string inputDirectory = Path.GetDirectoryName(inputPath);
-                        searchPaths.Add(Path.Combine(inputDirectory, path));
-                    }
-
-                    bool found = false;
-                    foreach (string searchPath in searchPaths)
-                    {
-                        if (_fileSystem.FileExists(searchPath))
-                        {
-                            using (TextReader innerReader = _fileSystem.OpenText(searchPath))
-                            {
-                                ReadAllLines(lines, innerReader, searchPath);
-                            }
-
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if (!found)
-                    {
-                        throw new MadokoReaderException(
-                            StringUtil.Format(
-                                Resources.ErrorIncludeFileNotFound,
-                                includeDirective.Path,
-                                string.Join(", ", searchPaths)));
-                    }
+                    ReadIncludedFile(includeDirective.Path, inputPath, lines);
                 }
                 else
                 {
                     lines.Add(line);
                 }
+            }
+        }
+
+        private void ReadIncludedFile(string includedFilePath, string inputPath, List<string> lines)
+        {
+            if (string.IsNullOrEmpty(Path.GetExtension(includedFilePath)))
+            {
+                includedFilePath = Path.ChangeExtension(includedFilePath, "mdk");
+            }
+
+            // If the INCLUDE directive specifies an absolute path, search only for that
+            // file. Otherwise, search for the specified file in the directories specified
+            // by the Madoko manual, in this order:
+            //    1) The currect directory.
+            //    2) The directory containing the including file.
+            //    3) The styles directory (NYI).
+            //    4) The Madoko installation directory (NYI).
+            var searchPaths = new List<string>();
+            if (Path.IsPathRooted(includedFilePath))
+            {
+                searchPaths.Add(includedFilePath);
+            }
+            else
+            {
+                searchPaths.Add(Path.Combine(_environment.CurrentDirectory, includedFilePath));
+
+                string inputDirectory = Path.GetDirectoryName(inputPath);
+                searchPaths.Add(Path.Combine(inputDirectory, includedFilePath));
+            }
+
+            bool found = false;
+            foreach (string searchPath in searchPaths)
+            {
+                if (_fileSystem.FileExists(searchPath))
+                {
+                    using (TextReader innerReader = _fileSystem.OpenText(searchPath))
+                    {
+                        ReadAllLines(lines, innerReader, searchPath);
+                    }
+
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                throw new MadokoReaderException(
+                    StringUtil.Format(
+                        Resources.ErrorIncludeFileNotFound,
+                        includedFilePath,
+                        string.Join(", ", searchPaths)));
             }
         }
     }
