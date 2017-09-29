@@ -7,6 +7,11 @@ namespace Mad2WordLib
 {
     public class FileSystem : IFileSystem
     {
+        public bool FileExists(string path)
+        {
+            return File.Exists(path);
+        }
+
         public TextReader OpenText(string path)
         {
             return File.OpenText(path);

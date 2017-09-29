@@ -9,16 +9,20 @@ namespace Mad2WordLib
 {
     public class LineSource
     {
+        private readonly IFileSystem _fileSystem;
+        private readonly IEnvironment _environment;
         private readonly string[] _lines;
 
         // The index of the next line to be retrieved from the source.
         private int _nextIndex;
-
-        public LineSource(TextReader reader, IFileSystem fileSystem)
+        
+        public LineSource(TextReader reader, IFileSystem fileSystem, IEnvironment environment, string inputPath)
         {
+            _fileSystem = fileSystem;
+            _environment = environment;
             var lines = new List<string>();
 
-            ReadAllLines(lines, reader, fileSystem);
+            ReadAllLines(lines, reader, inputPath);
 
             _lines = lines.ToArray();
         }
@@ -68,7 +72,7 @@ namespace Mad2WordLib
             }
         }
 
-        private void ReadAllLines(List<string> lines, TextReader reader, IFileSystem fileSystem)
+        private void ReadAllLines(List<string> lines, TextReader reader, string inputPath)
         {
             string line;
             while ((line = reader.ReadLine()) != null)
@@ -82,9 +86,41 @@ namespace Mad2WordLib
                         path = Path.ChangeExtension(path, "mdk");
                     }
 
-                    using (TextReader innerReader = fileSystem.OpenText(path))
+                    var searchPaths = new List<string>();
+                    if (Path.IsPathRooted(path))
                     {
-                        ReadAllLines(lines, innerReader, fileSystem);
+                        searchPaths.Add(path);
+                    }
+                    else
+                    {
+                        searchPaths.Add(Path.Combine(_environment.CurrentDirectory, path));
+
+                        string inputDirectory = Path.GetDirectoryName(inputPath);
+                        searchPaths.Add(Path.Combine(inputDirectory, path));
+                    }
+
+                    bool found = false;
+                    foreach (string searchPath in searchPaths)
+                    {
+                        if (_fileSystem.FileExists(searchPath))
+                        {
+                            using (TextReader innerReader = _fileSystem.OpenText(searchPath))
+                            {
+                                ReadAllLines(lines, innerReader, searchPath);
+                            }
+
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found)
+                    {
+                        throw new MadokoReaderException(
+                            StringUtil.Format(
+                                Resources.ErrorIncludeFileNotFound,
+                                includeDirective.Path,
+                                string.Join(", ", searchPaths)));
                     }
                 }
                 else

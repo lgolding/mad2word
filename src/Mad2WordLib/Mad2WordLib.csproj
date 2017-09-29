@@ -29,6 +29,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileSystem.cs" />
+    <Compile Include="IEnvironment.cs" />
     <Compile Include="IFileSystem.cs" />
     <Compile Include="IMadokoVisitor.cs" />
     <Compile Include="IncludeDirective.cs" />
@@ -41,6 +42,7 @@
     <Compile Include="MadokoHeading.cs" />
     <Compile Include="MadokoLine.cs" />
     <Compile Include="MadokoNode.cs" />
+    <Compile Include="MadokoReaderException.cs" />
     <Compile Include="MadokoRun.cs" />
     <Compile Include="MadokoRunType.cs" />
     <Compile Include="MadokoTitle.cs" />
@@ -48,6 +50,7 @@
     <Compile Include="Metadata.cs" />
     <Compile Include="ParagraphExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RealEnvironment.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

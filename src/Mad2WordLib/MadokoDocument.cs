@@ -8,19 +8,19 @@ namespace Mad2WordLib
 {
     public class MadokoDocument
     {
-        public static MadokoDocument Read(string inputPath, IFileSystem fileSystem)
+        public static MadokoDocument Read(string inputPath, IFileSystem fileSystem, IEnvironment environment)
         {
             using (var reader = new StreamReader(File.OpenRead(inputPath)))
             {
-                return Read(reader, fileSystem);
+                return Read(reader, fileSystem, environment, inputPath);
             }
         }
 
-        public static MadokoDocument Read(TextReader reader, IFileSystem fileSystem)
+        public static MadokoDocument Read(TextReader reader, IFileSystem fileSystem, IEnvironment environment, string inputPath)
         {
             var document = new MadokoDocument();
 
-            var lineSource = new LineSource(reader, fileSystem);
+            var lineSource = new LineSource(reader, fileSystem, environment, inputPath);
             var metadata = new Metadata(lineSource);
 
             while (!lineSource.AtEnd)

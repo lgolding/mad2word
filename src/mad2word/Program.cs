@@ -40,8 +40,9 @@ namespace Mad2Word
 
             File.Copy(options.TemplatePath, options.OutputPath);
 
+            IEnvironment environment = new RealEnvironment();
             IFileSystem fileSystem = new FileSystem();
-            var madokoDocument = MadokoDocument.Read(options.InputPath, fileSystem);
+            var madokoDocument = MadokoDocument.Read(options.InputPath, fileSystem, environment);
 
             MadokoToWordConverter.Convert(madokoDocument, options.OutputPath);
 

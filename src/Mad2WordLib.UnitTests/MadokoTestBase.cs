@@ -12,8 +12,9 @@ namespace Mad2WordLib.UnitTests
             MadokoDocument document;
             using (var reader = new StringReader(input))
             {
-                IFileSystem fileSystem = new FakeFileSystem();
-                document = MadokoDocument.Read(reader, fileSystem);
+                var environment = new FakeEnvironment();
+                var fileSystem = new FakeFileSystem(environment);
+                document = MadokoDocument.Read(reader, fileSystem, environment, inputPath: null);
             }
 
             return document;
@@ -24,8 +25,9 @@ namespace Mad2WordLib.UnitTests
             LineSource lineSource;
             using (var reader = new StringReader(input))
             {
-                IFileSystem fileSystem = new FakeFileSystem();
-                lineSource = new LineSource(reader, fileSystem);
+                var environment = new FakeEnvironment();
+                var fileSystem = new FakeFileSystem(environment);
+                lineSource = new LineSource(reader, fileSystem, environment, inputPath: null);
             }
 
             return lineSource;

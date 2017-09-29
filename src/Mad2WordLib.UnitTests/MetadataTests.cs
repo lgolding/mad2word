@@ -134,10 +134,11 @@ Heading Base: 2
         {
             Metadata metadata = null;
 
-            var fileSystem = new FakeFileSystem();
+            var environment = new FakeEnvironment();
+            var fileSystem = new FakeFileSystem(environment);
             using (TextReader reader = new StringReader(input))
             {
-                var lineSource = new LineSource(reader, fileSystem);
+                var lineSource = new LineSource(reader, fileSystem, environment, inputPath: null);
                 metadata = new Metadata(lineSource);
             }
 
