@@ -61,6 +61,10 @@ namespace Mad2WordLib
                         key = ClassAttribute;
                         value = specifier.Substring(1);
                     }
+                    else if (specifier.Equals("-", StringComparison.Ordinal))
+                    {
+                        break;
+                    }
                 }
                 else if (colonIndex > 0 && colonIndex < specifier.Length - 1)
                 {

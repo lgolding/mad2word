@@ -106,7 +106,7 @@ namespace Mad2WordLib.UnitTests
         {
             Action action = () => MadokoAttribute.Parse(":value");
 
-            action.ShouldThrowExactly<ArgumentException>();
+            action.ShouldThrowExactly<MadokoParserException>();
         }
 
         [Fact(DisplayName = nameof(MadokoAttribute_Parse_throws_on_trailing_colon))]
@@ -114,7 +114,7 @@ namespace Mad2WordLib.UnitTests
         {
             Action action = () => MadokoAttribute.Parse("key:");
 
-            action.ShouldThrowExactly<ArgumentException>();
+            action.ShouldThrowExactly<MadokoParserException>();
         }
     }
 }
