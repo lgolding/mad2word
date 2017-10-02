@@ -10,6 +10,8 @@ namespace Mad2WordLib
 {
     public class MadokoAttribute
     {
+        public const string IdAttribute = "id";
+
         internal static readonly MadokoAttribute[] EmptyAttributes = new MadokoAttribute[0];
 
         public MadokoAttribute(string key, string value)
@@ -42,8 +44,25 @@ namespace Mad2WordLib
 
             foreach (string specifier in attributeSpecifiers)
             {
+                string key = null;
+                string value = null;
+
                 int colonIndex = specifier.IndexOf(':');
-                if (colonIndex < 1 || colonIndex >= specifier.Length - 1)
+                if (colonIndex < 0)
+                {
+                    if (specifier.StartsWith("#"))
+                    {
+                        key = IdAttribute;
+                        value = specifier.Substring(1);
+                    }
+                }
+                else if (colonIndex > 0 && colonIndex < specifier.Length - 1)
+                {
+                    key = specifier.Substring(0, colonIndex);
+                    value = specifier.Substring(colonIndex + 1);
+                }
+
+                if (key == null || value == null)
                 {
                     throw new ArgumentException(
                         string.Format(
@@ -52,8 +71,8 @@ namespace Mad2WordLib
                             input));
                 }
 
-                string key = specifier.Substring(0, colonIndex).Trim();
-                string value = specifier.Substring(colonIndex + 1).Trim();
+                key = key.Trim();
+                value = value.Trim();
 
                 attributes.Add(new MadokoAttribute(key, value));
             }

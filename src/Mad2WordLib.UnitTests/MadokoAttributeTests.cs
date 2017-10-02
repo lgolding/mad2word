@@ -54,6 +54,26 @@ namespace Mad2WordLib.UnitTests
             result[1].Value.Should().Be("value2");
         }
 
+        [Fact(DisplayName = nameof(MadokoAttribute_Parse_parses_id_shorthand))]
+        public void MadokoAttribute_Parse_parses_id_shorthand()
+        {
+            MadokoAttribute[] result = MadokoAttribute.Parse("#chapter-1");
+            result.Length.Should().Be(1);
+            result[0].Key.Should().Be(MadokoAttribute.IdAttribute);
+            result[0].Value.Should().Be("chapter-1");
+        }
+
+        [Fact(DisplayName = nameof(MadokoAttribute_Parse_parses_mixed_attributes))]
+        public void MadokoAttribute_Parse_parses_mixed_attributes()
+        {
+            MadokoAttribute[] result = MadokoAttribute.Parse("key: value; #chapter-1");
+            result.Length.Should().Be(2);
+            result[0].Key.Should().Be("key");
+            result[0].Value.Should().Be("value");
+            result[1].Key.Should().Be(MadokoAttribute.IdAttribute);
+            result[1].Value.Should().Be("chapter-1");
+        }
+
         [Fact(DisplayName = nameof(MadokoAttribute_Parse_throws_on_null_input))]
         public void MadokoAttribute_Parse_throws_on_null_input()
         {
