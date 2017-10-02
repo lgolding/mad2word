@@ -43,6 +43,7 @@
     <Compile Include="MadokoHeading.cs" />
     <Compile Include="MadokoLine.cs" />
     <Compile Include="MadokoNode.cs" />
+    <Compile Include="MadokoParserException.cs" />
     <Compile Include="MadokoReaderException.cs" />
     <Compile Include="MadokoRun.cs" />
     <Compile Include="MadokoRunType.cs" />

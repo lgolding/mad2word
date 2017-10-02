@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See the LICENSE file in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Mad2WordLib
 {
@@ -16,54 +18,74 @@ namespace Mad2WordLib
             }
         }
 
-        public static MadokoDocument Read(TextReader reader, IFileSystem fileSystem, IEnvironment environment, string inputPath)
+        internal static MadokoDocument Read(TextReader reader, IFileSystem fileSystem, IEnvironment environment, string inputPath)
         {
             var document = new MadokoDocument();
+            var errors = new List<MadokoParserException>();
 
             var lineSource = new LineSource(reader, fileSystem, environment, inputPath);
             var metadata = new Metadata(lineSource);
 
             while (!lineSource.AtEnd)
             {
-                SkipBlankLines(lineSource);
-                if (lineSource.AtEnd)
+                try
                 {
-                    break;
-                }
-
-                string nextLine = lineSource.PeekLine();
-                if (MadokoHeading.MatchesLine(nextLine))
-                {
-                    document.Blocks.Add(new MadokoHeading(lineSource));
-                }
-                else if (MadokoBulletListItem.MatchesLine(nextLine))
-                {
-                    document.Blocks.Add(new MadokoBulletListItem(lineSource));
-                }
-                else if (MadokoCodeBlock.MatchesLine(nextLine))
-                {
-                    document.Blocks.Add(new MadokoCodeBlock(lineSource));
-                }
-                else if (MadokoTitle.MatchesLine(nextLine))
-                {
-                    string title = metadata.Title;
-                    if (title != null)
+                    SkipBlankLines(lineSource);
+                    if (lineSource.AtEnd)
                     {
-                        document.Blocks.Add(new MadokoTitle(title));
+                        break;
                     }
 
-                    lineSource.Advance();
+                    string nextLine = lineSource.PeekLine();
+                    if (MadokoHeading.MatchesLine(nextLine))
+                    {
+                        document.Blocks.Add(new MadokoHeading(lineSource));
+                    }
+                    else if (MadokoBulletListItem.MatchesLine(nextLine))
+                    {
+                        document.Blocks.Add(new MadokoBulletListItem(lineSource));
+                    }
+                    else if (MadokoCodeBlock.MatchesLine(nextLine))
+                    {
+                        document.Blocks.Add(new MadokoCodeBlock(lineSource));
+                    }
+                    else if (MadokoTitle.MatchesLine(nextLine))
+                    {
+                        string title = metadata.Title;
+                        if (title != null)
+                        {
+                            document.Blocks.Add(new MadokoTitle(title));
+                        }
+
+                        lineSource.Advance();
+                    }
+                    else
+                    {
+                        document.Blocks.Add(new MadokoBlock(lineSource));
+                    }
                 }
-                else
+                catch (MadokoParserException ex)
                 {
-                    document.Blocks.Add(new MadokoBlock(lineSource));
+                    if (ex.LineNumber == 0)
+                    {
+                        ex.LineNumber = lineSource.LineNumber;
+                    }
+
+                    errors.Add(ex);
                 }
+            }
+
+            if (errors.Any())
+            {
+                throw new AggregateException(errors);
             }
 
             return document;
         }
 
         public List<MadokoBlock> Blocks { get; }
+
+        public List<MadokoParserException> Errors { get; }
 
         private MadokoDocument()
         {

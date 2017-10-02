@@ -22,11 +22,19 @@ namespace Mad2Word
                         options => Run(options),
                         err => 1);
             }
+            catch (AggregateException ex)
+            {
+                foreach (Exception inner in ex.InnerExceptions)
+                {
+                    Console.Error.WriteLine(inner.Message);
+                }
+            }
             catch (Exception ex)
             {
                 Console.Error.WriteLine(ex.Message);
-                return 1;
             }
+
+            return 1;
         }
 
         private static int Run(CommandLineOptions options)

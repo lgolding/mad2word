@@ -70,7 +70,7 @@ namespace Mad2WordLib
 
                 if (key == null || value == null)
                 {
-                    throw new ArgumentException(
+                    throw new MadokoParserException(
                         string.Format(
                             CultureInfo.InvariantCulture,
                             Resources.ErrorInvalidAttributeSyntax,

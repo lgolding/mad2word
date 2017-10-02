@@ -77,5 +77,14 @@ namespace Mad2WordLib {
                 return ResourceManager.GetString("ErrorInvalidAttributeSyntax", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Line {0}: error: {1}.
+        /// </summary>
+        internal static string ParserErrorMessageFormat {
+            get {
+                return ResourceManager.GetString("ParserErrorMessageFormat", resourceCulture);
+            }
+        }
     }
 }

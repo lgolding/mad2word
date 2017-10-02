@@ -123,4 +123,7 @@
   <data name="ErrorInvalidAttributeSyntax" xml:space="preserve">
     <value>The string "{0}" is not a valid attribute specifier.</value>
   </data>
+  <data name="ParserErrorMessageFormat" xml:space="preserve">
+    <value>Line {0}: error: {1}</value>
+  </data>
 </root>
