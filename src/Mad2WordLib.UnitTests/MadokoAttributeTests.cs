@@ -89,10 +89,19 @@ namespace Mad2WordLib.UnitTests
         [Fact(DisplayName = nameof(MadokoAttribute_Parse_ignores_leading_hyphen))]
         public void MadokoAttribute_Parse_ignores_leading_hyphen()
         {
-            IDictionary<string, MadokoAttribute> result = MadokoAttribute.Parse("- .title");
+            IDictionary<string, MadokoAttribute> result = MadokoAttribute.Parse("- key:value");
             result.Count.Should().Be(1);
-            result[MadokoAttribute.ClassAttribute].Key.Should().Be(MadokoAttribute.ClassAttribute);
-            result[MadokoAttribute.ClassAttribute].Value.Should().Be("title");
+            result["key"].Key.Should().Be("key");
+            result["key"].Value.Should().Be("value");
+        }
+
+        [Fact(DisplayName = nameof(MadokoAttribute_Parse_ignores_custom_numbering_attributes))]
+        public void MadokoAttribute_Parse_ignores_custom_numbering_attributes()
+        {
+            IDictionary<string, MadokoAttribute> result = MadokoAttribute.Parse("@h1; key:value");
+            result.Count.Should().Be(1);
+            result["key"].Key.Should().Be("key");
+            result["key"].Value.Should().Be("value");
         }
 
         [Fact(DisplayName = nameof(MadokoAttribute_Parse_ignores_hyphen_after_leading_space))]

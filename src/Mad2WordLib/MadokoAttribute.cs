@@ -55,6 +55,9 @@ namespace Mad2WordLib
                 string key = null;
                 string value = null;
 
+                // We don't handle all attribute forms; don't complain about the ones we don't handle.
+                bool ignore = false;
+
                 int colonIndex = specifier.IndexOf(':');
                 if (colonIndex < 0)
                 {
@@ -68,9 +71,9 @@ namespace Mad2WordLib
                         key = ClassAttribute;
                         value = specifier.Substring(1);
                     }
-                    else if (specifier.Equals("-", StringComparison.Ordinal))
+                    else if (specifier.StartsWith("@"))
                     {
-                        break;
+                        ignore = true;
                     }
                 }
                 else if (colonIndex > 0 && colonIndex < specifier.Length - 1)
@@ -79,19 +82,22 @@ namespace Mad2WordLib
                     value = specifier.Substring(colonIndex + 1);
                 }
 
-                if (key == null || value == null)
+                if (!ignore)
                 {
-                    throw new MadokoParserException(
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            Resources.ErrorInvalidAttributeSyntax,
-                            input));
+                    if (key == null || value == null)
+                    {
+                        throw new MadokoParserException(
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                Resources.ErrorInvalidAttributeSyntax,
+                                specifier));
+                    }
+
+                    key = key.Trim();
+                    value = value.Trim();
+
+                    attributes.Add(key, new MadokoAttribute(key, value));
                 }
-
-                key = key.Trim();
-                value = value.Trim();
-
-                attributes.Add(key, new MadokoAttribute(key, value));
             }
 
             return attributes;
