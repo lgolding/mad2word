@@ -86,11 +86,13 @@ namespace Mad2WordLib.UnitTests
             result[MadokoAttribute.ClassAttribute].Value.Should().Be("title");
         }
 
-        [Fact(DisplayName = nameof(MadokoAttribute_Parse_ignores_hyphen))]
-        public void MadokoAttribute_Parse_ignores_hyphen()
+        [Fact(DisplayName = nameof(MadokoAttribute_Parse_ignores_leading_hyphen))]
+        public void MadokoAttribute_Parse_ignores_leading_hyphen()
         {
-            IDictionary<string, MadokoAttribute> result = MadokoAttribute.Parse("-");
-            result.Count.Should().Be(0);
+            IDictionary<string, MadokoAttribute> result = MadokoAttribute.Parse("- .title");
+            result.Count.Should().Be(1);
+            result[MadokoAttribute.ClassAttribute].Key.Should().Be(MadokoAttribute.ClassAttribute);
+            result[MadokoAttribute.ClassAttribute].Value.Should().Be("title");
         }
 
         [Fact(DisplayName = nameof(MadokoAttribute_Parse_throws_on_null_input))]

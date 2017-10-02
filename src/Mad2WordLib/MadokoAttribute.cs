@@ -39,6 +39,13 @@ namespace Mad2WordLib
 
             var attributes = new Dictionary<string, MadokoAttribute>();
 
+            input = input.Trim();
+            if (input[0] == '-')
+            {
+                input = input.Substring(1);
+                input.Trim();
+            }
+
             IEnumerable<string> attributeSpecifiers = input.Trim()
                 .Split(';')
                 .Select(s => s.Trim());
