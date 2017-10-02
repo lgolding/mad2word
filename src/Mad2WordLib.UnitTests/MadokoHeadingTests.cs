@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See the LICENSE file in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -148,13 +149,13 @@ Some thoughts
         public void MadokoHeading_allows_attributes()
         {
             SingleRunTestCase("# Chapter 1 {key1: value1; key2: value2}", 1, "Chapter 1",
-                new[] {
-                    new MadokoAttribute("key1", "value1"),
-                    new MadokoAttribute("key2", "value2")
+                new Dictionary<string, MadokoAttribute>() {
+                    { "key1", new MadokoAttribute("key1", "value1") },
+                    { "key2", new MadokoAttribute("key2", "value2") },
                 });
         }
 
-        private void SingleRunTestCase(string line, int expectedLevel, string expectedText, MadokoAttribute[] expectedAttributes = null)
+        private void SingleRunTestCase(string line, int expectedLevel, string expectedText, IDictionary<string, MadokoAttribute> expectedAttributes = null)
         {
             MadokoHeading madokoHeading = MakeHeading(line);
 
@@ -167,11 +168,11 @@ Some thoughts
                 expectedAttributes = MadokoAttribute.EmptyAttributes;
             }
 
-            madokoHeading.Attributes.Length.Should().Be(expectedAttributes.Length);
-            for (int i = 0; i < madokoHeading.Attributes.Length; ++i)
+            madokoHeading.Attributes.Count.Should().Be(expectedAttributes.Count);
+            foreach (string key in expectedAttributes.Keys)
             {
-                madokoHeading.Attributes[i].Key.Should().Be(expectedAttributes[i].Key);
-                madokoHeading.Attributes[i].Value.Should().Be(expectedAttributes[i].Value);
+                madokoHeading.Attributes[key].Key.Should().Be(expectedAttributes[key].Key);
+                madokoHeading.Attributes[key].Value.Should().Be(expectedAttributes[key].Value);
             }
         }
 

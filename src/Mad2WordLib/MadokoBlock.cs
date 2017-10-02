@@ -18,7 +18,7 @@ namespace Mad2WordLib
             AppendRemainderOfBlock(lineSource);
         }
 
-        public MadokoAttribute[] Attributes { get; protected set; }
+        public IDictionary<string, MadokoAttribute> Attributes { get; protected set; }
 
         public List<MadokoRun> Runs { get; }
 

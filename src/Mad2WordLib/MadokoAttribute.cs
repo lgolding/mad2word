@@ -12,7 +12,7 @@ namespace Mad2WordLib
     {
         public const string IdAttribute = "id";
 
-        internal static readonly MadokoAttribute[] EmptyAttributes = new MadokoAttribute[0];
+        internal static readonly IDictionary<string, MadokoAttribute> EmptyAttributes = new Dictionary<string, MadokoAttribute>();
 
         public MadokoAttribute(string key, string value)
         {
@@ -24,7 +24,7 @@ namespace Mad2WordLib
 
         public string Value { get; }
 
-        internal static MadokoAttribute[] Parse(string input)
+        internal static IDictionary<string, MadokoAttribute> Parse(string input)
         {
             if (input == null)
             {
@@ -36,7 +36,7 @@ namespace Mad2WordLib
                 return EmptyAttributes;
             }
 
-            var attributes = new List<MadokoAttribute>();
+            var attributes = new Dictionary<string, MadokoAttribute>();
 
             IEnumerable<string> attributeSpecifiers = input.Trim()
                 .Split(';')
@@ -74,10 +74,10 @@ namespace Mad2WordLib
                 key = key.Trim();
                 value = value.Trim();
 
-                attributes.Add(new MadokoAttribute(key, value));
+                attributes.Add(key, new MadokoAttribute(key, value));
             }
 
-            return attributes.ToArray();
+            return attributes;
         }
     }
 }
