@@ -11,48 +11,42 @@ namespace Mad2WordLib.UnitTests
 {
     public class MadokoHeadingTests : MadokoTestBase
     {
-        [Fact(DisplayName = nameof(MadokoHeading_ThrowsOnNonLeadingHashCharacters))]
-        public void MadokoHeading_ThrowsOnNonLeadingHashCharacters()
+        [Fact(DisplayName = nameof(MadokoHeading_throws_on_non_leading_hash_characters))]
+        public void MadokoHeading_throws_on_non_leading_hash_characters()
         {
             Action action = () => MakeHeading("Heading #1");
 
             action.ShouldThrow<InvalidOperationException>();
         }
 
-        [Fact(DisplayName = nameof(MadokoHeading_ThrowsOnInvalidHeading))]
-        public void MadokoHeading_ThrowsOnInvalidHeading()
+        [Fact(DisplayName = nameof(MadokoHeading_throws_on_invalid_heading))]
+        public void MadokoHeading_throws_on_invalid_heading()
         {
             Action action = () => MakeHeading("Heading 1");
 
             action.ShouldThrow<InvalidOperationException>();
         }
 
-        [Fact(DisplayName = nameof(MadokoHeading_ParsesLevel1Heading))]
-        public void MadokoHeading_ParsesLevel1Heading()
+        [Fact(DisplayName = nameof(MadokoHeading_parses_level_1_heading))]
+        public void MadokoHeading_parses_level_1_heading()
         {
             SingleRunTestCase("# Heading 1", 1, "Heading 1");
         }
 
-        [Fact(DisplayName = nameof(MadokoHeading_ParsesLevel2Heading))]
-        public void MadokoHeading_ParsesLevel2Heading()
+        [Fact(DisplayName = nameof(MadokoHeading_parses_level_2_heading))]
+        public void MadokoHeading_parses_level_2_heading()
         {
             SingleRunTestCase("## Heading 2", 2, "Heading 2");
         }
 
-        [Fact(DisplayName = nameof(MadokoHeading_TrimsHeadingText))]
-        public void MadokoHeading_TrimsHeadingText()
+        [Fact(DisplayName = nameof(MadokoHeading_trims_heading_text))]
+        public void MadokoHeading_trims_heading_text()
         {
             SingleRunTestCase("# Heading 1  ", 1, "Heading 1");
         }
 
-        [Fact(DisplayName = nameof(MadokoHeading_StopsAtOpenCurlyBrace))]
-        public void MadokoHeading_StopsAtOpenCurlyBrace()
-        {
-            SingleRunTestCase("# Heading 1  { #heading-1 }", 1, "Heading 1");
-        }
-
-        [Fact(DisplayName = nameof(MadokoHeading_SupportsRunFormatting))]
-        public void MadokoHeading_SupportsRunFormatting()
+        [Fact(DisplayName = nameof(MadokoHeading_supports_run_formatting))]
+        public void MadokoHeading_supports_run_formatting()
         {
             MadokoHeading madokoHeading = MakeHeading("## `runs` property");
 
@@ -63,8 +57,8 @@ namespace Mad2WordLib.UnitTests
             madokoHeading.Runs[1].Text.Should().Be(" property");
         }
 
-        [Fact(DisplayName = nameof(MadokoHeading_CannotSpanSourceLines))]
-        public void MadokoHeading_CannotSpanSourceLines()
+        [Fact(DisplayName = nameof(MadokoHeading_cannot_span_source_lines))]
+        public void MadokoHeading_cannot_span_source_lines()
         {
             const string Input =
 @"# Chapter 1
@@ -77,8 +71,8 @@ The beginning";
             madokoHeading.Runs[0].Text.Should().Be("Chapter 1");
         }
 
-        [Fact(DisplayName = nameof(MadokoHeading_CanAppearOnConsecutiveLines))]
-        public void MadokoHeading_CanAppearOnConsecutiveLines()
+        [Fact(DisplayName = nameof(MadokoHeading_can_appear_on_consecutive_lines))]
+        public void MadokoHeading_can_appear_on_consecutive_lines()
         {
             const string Input =
 @"# Chapter 1
@@ -150,13 +144,35 @@ Some thoughts
             heading.Runs[0].Text.Should().Be("Chapter 4");
         }
 
-        private void SingleRunTestCase(string line, int expectedLevel, string expectedText)
+        [Fact(DisplayName = nameof(MadokoHeading_allows_attributes))]
+        public void MadokoHeading_allows_attributes()
+        {
+            SingleRunTestCase("# Chapter 1 {key1: value1; key2: value2}", 1, "Chapter 1",
+                new[] {
+                    new MadokoAttribute("key1", "value1"),
+                    new MadokoAttribute("key2", "value2")
+                });
+        }
+
+        private void SingleRunTestCase(string line, int expectedLevel, string expectedText, MadokoAttribute[] expectedAttributes = null)
         {
             MadokoHeading madokoHeading = MakeHeading(line);
 
             madokoHeading.Level.Should().Be(expectedLevel);
             madokoHeading.Runs[0].RunType.Should().Be(MadokoRunType.PlainText);
             madokoHeading.Runs[0].Text.Should().Be(expectedText);
+
+            if (expectedAttributes == null)
+            {
+                expectedAttributes = MadokoAttribute.EmptyAttributes;
+            }
+
+            madokoHeading.Attributes.Length.Should().Be(expectedAttributes.Length);
+            for (int i = 0; i < madokoHeading.Attributes.Length; ++i)
+            {
+                madokoHeading.Attributes[i].Key.Should().Be(expectedAttributes[i].Key);
+                madokoHeading.Attributes[i].Value.Should().Be(expectedAttributes[i].Value);
+            }
         }
 
         private static MadokoHeading MakeHeading(string input)

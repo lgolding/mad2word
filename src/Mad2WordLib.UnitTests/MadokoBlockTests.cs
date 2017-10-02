@@ -9,8 +9,8 @@ namespace Mad2WordLib.UnitTests
 {
     public class MadokoBlockTests
     {
-        [Fact(DisplayName = nameof(MadokoBlock_CanOccupyASingleLine))]
-        public void MadokoBlock_CanOccupyASingleLine()
+        [Fact(DisplayName = nameof(MadokoBlock_can_occupy_a_single_line))]
+        public void MadokoBlock_can_occupy_a_single_line()
         {
             MadokoBlock block = MakeBlock("one");
 
@@ -18,8 +18,8 @@ namespace Mad2WordLib.UnitTests
             block.Runs[0].Text.Should().Be("one");
         }
 
-        [Fact(DisplayName = nameof(MadokoBlock_InsertsSpaceWhenSpanningSourceLines))]
-        public void MadokoBlock_InsertsSpaceWhenSpanningSourceLines()
+        [Fact(DisplayName = nameof(MadokoBlock_inserts_space_when_spanning_source_lines))]
+        public void MadokoBlock_inserts_space_when_spanning_source_lines()
         {
             MadokoBlock block = MakeBlock(
 @"one
@@ -30,8 +30,8 @@ two");
             block.Runs[1].Text.Should().Be(" two");
         }
 
-        [Fact(DisplayName = nameof(MadokoBlock_EndsWithBlankLine))]
-        public void MadokoBlock_EndsWithBlankLine()
+        [Fact(DisplayName = nameof(MadokoBlock_ends_with_blank_line))]
+        public void MadokoBlock_ends_with_blank_line()
         {
             MadokoBlock block = MakeBlock(
 @"one
@@ -42,8 +42,8 @@ two");
             block.Runs[0].Text.Should().Be("one");
         }
 
-        [Fact(DisplayName = nameof(MadokoBlock_EndsWithHeader))]
-        public void MadokoBlock_EndsWithHeader()
+        [Fact(DisplayName = nameof(MadokoBlock_ends_with_header))]
+        public void MadokoBlock_ends_with_header()
         {
             MadokoBlock block = MakeBlock(
 @"one

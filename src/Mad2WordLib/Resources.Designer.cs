@@ -68,5 +68,14 @@ namespace Mad2WordLib {
                 return ResourceManager.GetString("ErrorIncludeFileNotFound", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The string &quot;{0}&quot; is not a valid attribute specifier..
+        /// </summary>
+        internal static string ErrorInvalidAttributeSyntax {
+            get {
+                return ResourceManager.GetString("ErrorInvalidAttributeSyntax", resourceCulture);
+            }
+        }
     }
 }

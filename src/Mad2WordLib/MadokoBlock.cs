@@ -18,6 +18,8 @@ namespace Mad2WordLib
             AppendRemainderOfBlock(lineSource);
         }
 
+        public MadokoAttribute[] Attributes { get; protected set; }
+
         public List<MadokoRun> Runs { get; }
 
         protected void AppendRemainderOfBlock(LineSource lineSource)

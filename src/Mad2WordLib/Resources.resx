@@ -120,4 +120,7 @@
   <data name="ErrorIncludeFileNotFound" xml:space="preserve">
     <value>Cannot find file '{0}' specified in INCLUDE directive. Searched for: {1}</value>
   </data>
+  <data name="ErrorInvalidAttributeSyntax" xml:space="preserve">
+    <value>The string "{0}" is not a valid attribute specifier.</value>
+  </data>
 </root>

@@ -8,7 +8,9 @@ namespace Mad2WordLib
 {
     public class MadokoHeading : MadokoBlock
     {
-        private static readonly Regex s_headingPattern = new Regex(@"^(?<level>#+)\s*(?<text>[^{]*)", RegexOptions.Compiled);
+        private static readonly Regex s_headingPattern = new Regex(
+            @"^(?<level>#+)\s*(?<text>[^{]*)({\s*(?<attributes>[^}]*)})?\s*$",
+            RegexOptions.Compiled);
 
         public MadokoHeading(LineSource lineSource)
         {
@@ -26,6 +28,7 @@ namespace Mad2WordLib
             lineSource.Advance();
 
             Level = match.Groups["level"].Value.Length;
+            Attributes = MadokoAttribute.Parse(match.Groups["attributes"].Value);
 
             string text = match.Groups["text"].Value.Trim();
             Runs.AddRange(MadokoLine.Parse(text));
