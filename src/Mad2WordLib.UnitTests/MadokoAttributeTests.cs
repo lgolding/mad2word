@@ -64,15 +64,26 @@ namespace Mad2WordLib.UnitTests
             result[MadokoAttribute.IdAttribute].Value.Should().Be("chapter-1");
         }
 
+        [Fact(DisplayName = nameof(MadokoAttribute_Parse_parses_class_shorthand))]
+        public void MadokoAttribute_Parse_parses_class_shorthand()
+        {
+            IDictionary<string, MadokoAttribute> result = MadokoAttribute.Parse(".title");
+            result.Count.Should().Be(1);
+            result[MadokoAttribute.ClassAttribute].Key.Should().Be(MadokoAttribute.ClassAttribute);
+            result[MadokoAttribute.ClassAttribute].Value.Should().Be("title");
+        }
+
         [Fact(DisplayName = nameof(MadokoAttribute_Parse_parses_mixed_attributes))]
         public void MadokoAttribute_Parse_parses_mixed_attributes()
         {
-            IDictionary<string, MadokoAttribute> result = MadokoAttribute.Parse("key: value; #chapter-1");
-            result.Count.Should().Be(2);
+            IDictionary<string, MadokoAttribute> result = MadokoAttribute.Parse("key: value; #chapter-1; .title");
+            result.Count.Should().Be(3);
             result["key"].Key.Should().Be("key");
             result["key"].Value.Should().Be("value");
             result[MadokoAttribute.IdAttribute].Key.Should().Be(MadokoAttribute.IdAttribute);
             result[MadokoAttribute.IdAttribute].Value.Should().Be("chapter-1");
+            result[MadokoAttribute.ClassAttribute].Key.Should().Be(MadokoAttribute.ClassAttribute);
+            result[MadokoAttribute.ClassAttribute].Value.Should().Be("title");
         }
 
         [Fact(DisplayName = nameof(MadokoAttribute_Parse_throws_on_null_input))]

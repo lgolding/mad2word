@@ -11,6 +11,7 @@ namespace Mad2WordLib
     public class MadokoAttribute
     {
         public const string IdAttribute = "id";
+        public const string ClassAttribute = "class";
 
         internal static readonly IDictionary<string, MadokoAttribute> EmptyAttributes = new Dictionary<string, MadokoAttribute>();
 
@@ -53,6 +54,11 @@ namespace Mad2WordLib
                     if (specifier.StartsWith("#"))
                     {
                         key = IdAttribute;
+                        value = specifier.Substring(1);
+                    }
+                    else if (specifier.StartsWith("."))
+                    {
+                        key = ClassAttribute;
                         value = specifier.Substring(1);
                     }
                 }
