@@ -32,19 +32,19 @@ namespace Mad2WordLib
                 throw new ArgumentNullException(nameof(input));
             }
 
+            input = input.Trim();
+            if (input.Length > 0 && input[0] == '-')
+            {
+                input = input.Substring(1);
+                input.Trim();
+            }
+
             if (string.IsNullOrWhiteSpace(input))
             {
                 return EmptyAttributes;
             }
 
             var attributes = new Dictionary<string, MadokoAttribute>();
-
-            input = input.Trim();
-            if (input[0] == '-')
-            {
-                input = input.Substring(1);
-                input.Trim();
-            }
 
             IEnumerable<string> attributeSpecifiers = input.Trim()
                 .Split(';')

@@ -95,6 +95,13 @@ namespace Mad2WordLib.UnitTests
             result[MadokoAttribute.ClassAttribute].Value.Should().Be("title");
         }
 
+        [Fact(DisplayName = nameof(MadokoAttribute_Parse_ignores_hyphen_after_leading_space))]
+        public void MadokoAttribute_Parse_ignores_hyphen_after_leading_space()
+        {
+            IDictionary<string, MadokoAttribute> result = MadokoAttribute.Parse(" - ");
+            result.Count.Should().Be(0);
+        }
+
         [Fact(DisplayName = nameof(MadokoAttribute_Parse_throws_on_null_input))]
         public void MadokoAttribute_Parse_throws_on_null_input()
         {
