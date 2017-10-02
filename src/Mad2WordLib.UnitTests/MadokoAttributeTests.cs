@@ -91,7 +91,7 @@ namespace Mad2WordLib.UnitTests
         {
             IDictionary<string, MadokoAttribute> result = MadokoAttribute.Parse("-");
             result.Count.Should().Be(0);
-0        }
+        }
 
         [Fact(DisplayName = nameof(MadokoAttribute_Parse_throws_on_null_input))]
         public void MadokoAttribute_Parse_throws_on_null_input()
