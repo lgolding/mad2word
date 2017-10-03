@@ -16,7 +16,7 @@ namespace Mad2WordLib
         // The index of the next line to be retrieved from the source.
         private int _nextIndex;
         
-        public LineSource(TextReader reader, IFileSystem fileSystem, IEnvironment environment, string inputPath)
+        public LineSource(TextReader reader, string inputPath, IFileSystem fileSystem, IEnvironment environment)
         {
             _fileSystem = fileSystem;
             _environment = environment;

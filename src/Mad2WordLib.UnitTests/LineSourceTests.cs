@@ -39,7 +39,7 @@ How it ended";
 
             const string InputPath = "document.mdk";
             TextReader reader = fileSystem.OpenText(InputPath);
-            string[] lines = new LineSource(reader, fileSystem, environment, InputPath).GetAllLines();
+            string[] lines = new LineSource(reader, InputPath, fileSystem, environment).GetAllLines();
 
             lines.Length.Should().Be(7);
             lines[0].Should().Be("# Top-level document");
@@ -80,7 +80,7 @@ How it began
             string inputPath = Path.Combine(DocumentDirectory, "document.mdk");
             TextReader reader = fileSystem.OpenText(inputPath);
 
-            string[] lines = new LineSource(reader, fileSystem, environment, inputPath).GetAllLines();
+            string[] lines = new LineSource(reader, inputPath, fileSystem, environment).GetAllLines();
 
             lines.Length.Should().Be(4);
             lines[0].Should().Be("# Top-level document");

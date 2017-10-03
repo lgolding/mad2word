@@ -27,7 +27,7 @@ namespace Mad2WordLib.UnitTests
             {
                 var environment = new FakeEnvironment();
                 var fileSystem = new FakeFileSystem(environment);
-                lineSource = new LineSource(reader, fileSystem, environment, inputPath: null);
+                lineSource = new LineSource(reader, null, fileSystem, environment);
             }
 
             return lineSource;

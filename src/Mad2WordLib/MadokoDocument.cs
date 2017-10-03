@@ -23,7 +23,7 @@ namespace Mad2WordLib
             var document = new MadokoDocument();
             var errors = new List<MadokoParserException>();
 
-            var lineSource = new LineSource(reader, fileSystem, environment, inputPath);
+            var lineSource = new LineSource(reader, inputPath, fileSystem, environment);
             var metadata = new Metadata(lineSource);
 
             while (!lineSource.AtEnd)

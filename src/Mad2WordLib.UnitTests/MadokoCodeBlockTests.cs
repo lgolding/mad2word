@@ -74,7 +74,7 @@ code2```";
             var fileSystem = new FakeFileSystem(environment);
             using (TextReader reader = new StringReader(input))
             {
-                var lineSource = new LineSource(reader, fileSystem, environment, inputPath: null);
+                var lineSource = new LineSource(reader, null, fileSystem, environment);
                 codeBlock = new MadokoCodeBlock(lineSource);
             }
 
