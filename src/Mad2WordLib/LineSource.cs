@@ -12,6 +12,9 @@ namespace Mad2WordLib
     {
         private string _filePath;
         private string[] _lines;
+
+        // The 1-based line number of the most recently read line, thus also
+        // the 0-based index of the next line to be read.
         private int _lineNumber;
 
         private readonly IFileSystem _fileSystem;

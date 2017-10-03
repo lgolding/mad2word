@@ -162,8 +162,33 @@ How it ended";
             // is included on the last line of Chapter1.mdk. PeekLine should see the first line
             // of Chapter2.mdk.
             string result = lineSource.PeekLine();
-            
+
             result.Should().Be("## Chapter 2");
+        }
+
+        [Fact(DisplayName = nameof(LineSource_Advance_navigates_into_included_files))]
+        public void LineSource_Advance_navigates_into_included_files()
+        {
+            var environment = new FakeEnvironment();
+            var fileSystem = new FakeFileSystem(environment);
+            fileSystem.AddFile("document.mdk", Document);
+            fileSystem.AddFile("Chapter1.mdk", Chapter1);
+            fileSystem.AddFile("Chapter2.mdk", Chapter2);
+            fileSystem.AddFile("Extra.mdk", Extra);
+
+            const string InputPath = "document.mdk";
+            TextReader reader = fileSystem.OpenText(InputPath);
+            var lineSource = new LineSource(reader, InputPath, fileSystem, environment);
+
+            lineSource.Advance();   // "# Top-level document"
+            lineSource.Advance();   // "## Chapter 1",
+
+            // We've advanced into Chapter1.mdk (that is, we've skipped over the first line
+            // of that file, so we should be positioned on (that is, ready to read) the second
+            // line of that file.
+            string result = lineSource.PeekLine();
+
+            result.Should().Be("How it began");
         }
     }
 }
