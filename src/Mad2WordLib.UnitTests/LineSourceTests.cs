@@ -88,5 +88,25 @@ How it ended";
                 lines[i].Should().Be(AllLines[i]);
             }
         }
+
+        [Fact(DisplayName = nameof(LineSource_tracks_input_file_and_line_number))]
+        public void LineSource_tracks_input_file_and_line_number()
+        {
+            var environment = new FakeEnvironment();
+            var fileSystem = new FakeFileSystem(environment);
+            fileSystem.AddFile("document.mdk", Document);
+            fileSystem.AddFile("Chapter1.mdk", Chapter1);
+            fileSystem.AddFile("Chapter2.mdk", Chapter2);
+            fileSystem.AddFile("Extra.mdk", Extra);
+
+            const string InputPath = "document.mdk";
+            TextReader reader = fileSystem.OpenText(InputPath);
+            var lineSource = new LineSource(reader, InputPath, fileSystem, environment);
+
+            string line = lineSource.GetLine();
+            line.Should().Be(AllLines[0]);
+            lineSource.LineNumber.Should().Be(1);
+            lineSource.FileName.Should().Be("document.mdk");
+        }
     }
 }

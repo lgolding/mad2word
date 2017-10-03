@@ -9,6 +9,7 @@ namespace Mad2WordLib
 {
     public class LineSource
     {
+        private readonly string _fileName;
         private readonly IFileSystem _fileSystem;
         private readonly IEnvironment _environment;
         private readonly string[] _lines;
@@ -16,18 +17,21 @@ namespace Mad2WordLib
         // The index of the next line to be retrieved from the source.
         private int _nextIndex;
         
-        public LineSource(TextReader reader, string inputPath, IFileSystem fileSystem, IEnvironment environment)
+        public LineSource(TextReader reader, string fileName, IFileSystem fileSystem, IEnvironment environment)
         {
+            _fileName = fileName;
             _fileSystem = fileSystem;
             _environment = environment;
             var lines = new List<string>();
 
-            ReadAllLines(lines, reader, inputPath);
+            ReadAllLines(lines, reader, fileName);
 
             _lines = lines.ToArray();
         }
 
-        public int LineNumber => _nextIndex + 1;
+        public string FileName => _fileName;
+
+        public int LineNumber => _nextIndex;
 
         public bool AtEnd => _nextIndex == _lines.Length;
 
@@ -72,7 +76,7 @@ namespace Mad2WordLib
             }
         }
 
-        private void ReadAllLines(List<string> lines, TextReader reader, string inputPath)
+        private void ReadAllLines(List<string> lines, TextReader reader, string fileName)
         {
             string line;
             while ((line = reader.ReadLine()) != null)
@@ -80,7 +84,7 @@ namespace Mad2WordLib
                 var includeDirective = IncludeDirective.CreateFrom(line);
                 if (includeDirective != null)
                 {
-                    ReadIncludedFile(includeDirective.Path, inputPath, lines);
+                    ReadIncludedFile(includeDirective.Path, fileName, lines);
                 }
                 else
                 {
@@ -89,7 +93,7 @@ namespace Mad2WordLib
             }
         }
 
-        private void ReadIncludedFile(string includedFilePath, string inputPath, List<string> lines)
+        private void ReadIncludedFile(string includedFilePath, string fileName, List<string> lines)
         {
             if (string.IsNullOrEmpty(Path.GetExtension(includedFilePath)))
             {
@@ -112,7 +116,7 @@ namespace Mad2WordLib
             {
                 searchPaths.Add(Path.Combine(_environment.CurrentDirectory, includedFilePath));
 
-                string inputDirectory = Path.GetDirectoryName(inputPath);
+                string inputDirectory = Path.GetDirectoryName(fileName);
                 searchPaths.Add(Path.Combine(inputDirectory, includedFilePath));
             }
 
