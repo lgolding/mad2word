@@ -79,7 +79,16 @@ namespace Mad2WordLib {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Line {0}: error: {1}.
+        ///   Looks up a localized string similar to (no file).
+        /// </summary>
+        internal static string NoFile {
+            get {
+                return ResourceManager.GetString("NoFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}({1}): error: {2}.
         /// </summary>
         internal static string ParserErrorMessageFormat {
             get {

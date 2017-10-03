@@ -123,7 +123,11 @@
   <data name="ErrorInvalidAttributeSyntax" xml:space="preserve">
     <value>"{0}" is not a valid attribute specifier.</value>
   </data>
+  <data name="NoFile" xml:space="preserve">
+    <value>(no file)</value>
+    <comment>Placeholder in messages when no input file is specified.</comment>
+  </data>
   <data name="ParserErrorMessageFormat" xml:space="preserve">
-    <value>Line {0}: error: {1}</value>
+    <value>{0}({1}): error: {2}</value>
   </data>
 </root>

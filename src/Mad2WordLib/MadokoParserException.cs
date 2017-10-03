@@ -17,13 +17,20 @@ namespace Mad2WordLib
 
         public MadokoParserException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
+        public string FilePath { get; set; }
+
         public int LineNumber { get; set; }
 
         public override string Message
         {
             get
             {
-                return string.Format(CultureInfo.InvariantCulture, Resources.ParserErrorMessageFormat, LineNumber, base.Message);
+                return string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.ParserErrorMessageFormat,
+                    FilePath ?? Resources.NoFile,
+                    LineNumber,
+                    base.Message);
             }
         }
     }

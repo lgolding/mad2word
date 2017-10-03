@@ -73,7 +73,7 @@ namespace Mad2WordLib
                     }
                     else if (specifier.StartsWith("@"))
                     {
-                        ignore = true;
+                        //ignore = true;
                     }
                 }
                 else if (colonIndex > 0 && colonIndex < specifier.Length - 1)

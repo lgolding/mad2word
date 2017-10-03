@@ -71,6 +71,11 @@ namespace Mad2WordLib
                         ex.LineNumber = lineSource.LineNumber;
                     }
 
+                    if (ex.FilePath == null)
+                    {
+                        ex.FilePath = lineSource.FilePath;
+                    }
+
                     errors.Add(ex);
                 }
             }
