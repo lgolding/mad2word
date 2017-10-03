@@ -166,6 +166,28 @@ How it ended";
             result.Should().Be("## Chapter 2");
         }
 
+        [Fact(DisplayName = nameof(LineSource_Peek_returns_null_at_end_of_entire_input))]
+        public void LineSource_Peek_returns_null_at_end_of_entire_input()
+        {
+            var environment = new FakeEnvironment();
+            var fileSystem = new FakeFileSystem(environment);
+            fileSystem.AddFile("document.mdk", Document);
+            fileSystem.AddFile("Chapter1.mdk", Chapter1);
+            fileSystem.AddFile("Chapter2.mdk", Chapter2);
+            fileSystem.AddFile("Extra.mdk", Extra);
+
+            const string InputPath = "document.mdk";
+            TextReader reader = fileSystem.OpenText(InputPath);
+            var lineSource = new LineSource(reader, InputPath, fileSystem, environment);
+
+            for (int i = 0; i < AllLines.Length; ++i)
+            {
+                lineSource.GetLine();
+            }
+
+            lineSource.PeekLine().Should().BeNull();
+        }
+
         [Fact(DisplayName = nameof(LineSource_Advance_navigates_into_included_files))]
         public void LineSource_Advance_navigates_into_included_files()
         {

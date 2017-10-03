@@ -101,14 +101,25 @@ namespace Mad2WordLib
                 lineNumber = state.LineNumber;
             }
 
-            // Having found the next line, if it's an INCLUDE directive, look
-            // into it.
-            string line = lines[lineNumber];
-            IncludeDirective includeDirective;
-            while ((includeDirective = IncludeDirective.CreateFrom(line)) != null)
+            string line;
+            if (lineNumber < lines.Length)
             {
-                string resolvedIncludeFilePath = ResolveIncludedFilePath(includeDirective.Path);
-                line = _fileSystem.OpenText(resolvedIncludeFilePath).ReadLine();
+                // Having found the next line, if it's an INCLUDE directive, look
+                // into it.
+                line = lines[lineNumber];
+                IncludeDirective includeDirective;
+                while ((includeDirective = IncludeDirective.CreateFrom(line)) != null)
+                {
+                    string resolvedIncludeFilePath = ResolveIncludedFilePath(includeDirective.Path);
+                    line = _fileSystem.OpenText(resolvedIncludeFilePath).ReadLine();
+                }
+            }
+            else
+            {
+                // If we popped the entire stack of nested include files without finding a file
+                // we're not already at the end of, then we are at the end of the entire
+                // input.
+                line = null;
             }
 
             return line;
