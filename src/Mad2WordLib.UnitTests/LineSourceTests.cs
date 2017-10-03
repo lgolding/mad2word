@@ -182,7 +182,7 @@ How it ended";
 
             for (int i = 0; i < AllLines.Length; ++i)
             {
-                lineSource.GetLine();
+                lineSource.Advance();
             }
 
             lineSource.PeekLine().Should().BeNull();
