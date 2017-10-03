@@ -113,11 +113,8 @@ namespace Mad2WordLib
 
         public void Advance()
         {
-            if (_lineNumber < _lines.Length)
-            {
-                ++_lineNumber;
-            }
-            else
+            string line = GetLine();
+            if (line == null)
             {
                 throw new InvalidOperationException("Unexpectedly encountered end of input.");
             }

@@ -47,7 +47,7 @@ namespace Mad2WordLib
             string text = match.Groups["text"].Value.Trim();
             Runs.AddRange(MadokoLine.Parse(text));
 
-            lineSource.Advance();
+            lineSource.GetLine();
 
             AppendRemainderOfBlock(lineSource);
         }

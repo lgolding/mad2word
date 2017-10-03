@@ -25,7 +25,7 @@ namespace Mad2WordLib
                         line));
             }
 
-            lineSource.Advance();
+            lineSource.GetLine();
 
             Level = match.Groups["level"].Value.Length;
             Attributes = MadokoAttribute.Parse(match.Groups["attributes"].Value);

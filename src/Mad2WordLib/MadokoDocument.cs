@@ -57,7 +57,7 @@ namespace Mad2WordLib
                             document.Blocks.Add(new MadokoTitle(title));
                         }
 
-                        lineSource.Advance();
+                        lineSource.GetLine();
                     }
                     else
                     {
@@ -101,7 +101,7 @@ namespace Mad2WordLib
         {
             while (!lineSource.AtEnd && string.IsNullOrWhiteSpace(lineSource.PeekLine()))
             {
-                lineSource.Advance();
+                lineSource.GetLine();
             }
         }
     }

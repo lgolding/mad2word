@@ -22,7 +22,7 @@ namespace Mad2WordLib
                         line));
             }
 
-            lineSource.Advance();
+            lineSource.GetLine();
 
             var sb = new StringBuilder();
             bool isFirstLine = true;

@@ -27,7 +27,7 @@ namespace Mad2WordLib
             string line;
             while (!lineSource.AtEnd && IsContinuationLine(line = lineSource.PeekLine()))
             {
-                lineSource.Advance();
+                lineSource.GetLine();
 
                 // This paragraph is continued from the preceding source line,
                 // so make sure there's a blank space between the end of that
