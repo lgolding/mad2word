@@ -27,8 +27,8 @@ How it ended";
 
         private const string Extra = "The extra content";
 
-        [Fact(DisplayName = nameof(LineSource_handles_includes))]
-        public void LineSource_handles_includes()
+        [Fact(DisplayName = nameof(LineSource_reads_includes))]
+        public void LineSource_reads_includes()
         {
             var environment = new FakeEnvironment();
             var fileSystem = new FakeFileSystem(environment);
@@ -51,8 +51,8 @@ How it ended";
             lines[6].Should().Be("The end");
         }
 
-        [Fact(DisplayName = nameof(LineSource_handles_includes_from_document_directory))]
-        public void LineSource_handles_includes_from_document_directory()
+        [Fact(DisplayName = nameof(LineSource_reads_includes_from_document_directory))]
+        public void LineSource_reads_includes_from_document_directory()
         {
             const string DocumentDirectory = @"C:\Users\Larry\Documents\MyDoc";
             const string CurrentDirectory = @"C:\Code";
