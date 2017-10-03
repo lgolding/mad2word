@@ -5,7 +5,9 @@ namespace Mad2WordLib.UnitTests
 {
     public class FakeEnvironment : IEnvironment
     {
-        public FakeEnvironment(string currentDirectory = @"C:\")
+        public const string DefaultWorkingDirectory = @"C:\";
+
+        public FakeEnvironment(string currentDirectory = DefaultWorkingDirectory)
         {
             CurrentDirectory = currentDirectory;
         }

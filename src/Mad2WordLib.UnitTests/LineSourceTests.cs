@@ -106,7 +106,37 @@ How it ended";
             string line = lineSource.GetLine();
             line.Should().Be(AllLines[0]);
             lineSource.LineNumber.Should().Be(1);
-            lineSource.FileName.Should().Be("document.mdk");
+            lineSource.FilePath.Should().Be(Path.Combine(FakeEnvironment.DefaultWorkingDirectory, "document.mdk"));
+
+            line = lineSource.GetLine();
+            line.Should().Be(AllLines[1]);
+            lineSource.LineNumber.Should().Be(1);
+            lineSource.FilePath.Should().Be(Path.Combine(FakeEnvironment.DefaultWorkingDirectory, "Chapter1.mdk"));
+
+            line = lineSource.GetLine();
+            line.Should().Be(AllLines[2]);
+            lineSource.LineNumber.Should().Be(2);
+            lineSource.FilePath.Should().Be(Path.Combine(FakeEnvironment.DefaultWorkingDirectory, "Chapter1.mdk"));
+
+            line = lineSource.GetLine();
+            line.Should().Be(AllLines[3]);
+            lineSource.LineNumber.Should().Be(1);
+            lineSource.FilePath.Should().Be(Path.Combine(FakeEnvironment.DefaultWorkingDirectory, "Extra.mdk"));
+
+            line = lineSource.GetLine();
+            line.Should().Be(AllLines[4]);
+            lineSource.LineNumber.Should().Be(1);
+            lineSource.FilePath.Should().Be(Path.Combine(FakeEnvironment.DefaultWorkingDirectory, "Chapter2.mdk"));
+
+            line = lineSource.GetLine();
+            line.Should().Be(AllLines[5]);
+            lineSource.LineNumber.Should().Be(2);
+            lineSource.FilePath.Should().Be(Path.Combine(FakeEnvironment.DefaultWorkingDirectory, "Chapter2.mdk"));
+
+            line = lineSource.GetLine();
+            line.Should().Be(AllLines[6]);
+            lineSource.LineNumber.Should().Be(4);
+            lineSource.FilePath.Should().Be(Path.Combine(FakeEnvironment.DefaultWorkingDirectory, "document.mdk"));
         }
     }
 }

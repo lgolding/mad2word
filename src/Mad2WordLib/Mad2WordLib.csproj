@@ -59,8 +59,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RunExtensions.cs" />
+    <Compile Include="StringExtensions.cs" />
     <Compile Include="StringUtil.cs" />
     <Compile Include="StyleIds.cs" />
+    <Compile Include="TextReaderExtensions.cs" />
     <Compile Include="WordProcessingVisitor.cs" />
   </ItemGroup>
   <ItemGroup>

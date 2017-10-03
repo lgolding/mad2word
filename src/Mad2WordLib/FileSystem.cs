@@ -16,5 +16,10 @@ namespace Mad2WordLib
         {
             return File.OpenText(path);
         }
+
+        public string[] ReadAllLines(string path)
+        {
+            return File.ReadAllLines(path);
+        }
     }
 }

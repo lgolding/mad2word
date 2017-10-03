@@ -19,12 +19,12 @@ namespace Mad2WordLib.UnitTests
 
         public bool FileExists(string path)
         {
-            return _fileContentsDictionary.ContainsKey(RootedPath(path));
+            return _fileContentsDictionary.ContainsKey(path.RootedPath(_environment));
         }
 
         public TextReader OpenText(string path)
         {
-            string rootedPath = RootedPath(path);
+            string rootedPath = path.RootedPath(_environment);
 
             if (!FileExists(rootedPath))
             {
@@ -34,19 +34,22 @@ namespace Mad2WordLib.UnitTests
             return new StringReader(_fileContentsDictionary[rootedPath]);
         }
 
-        internal void AddFile(string path, string fileContents)
+        public string[] ReadAllLines(string path)
         {
-            _fileContentsDictionary.Add(RootedPath(path), fileContents);
-        }
+            string rootedPath = path.RootedPath(_environment);
 
-        private string RootedPath(string path)
-        {
-            if (!Path.IsPathRooted(path))
+            if (!FileExists(rootedPath))
             {
-                path = Path.Combine(_environment.CurrentDirectory, path);
+                throw new FileNotFoundException("The specified file was not found: " + rootedPath, rootedPath);
             }
 
-            return path;
+            var reader = new StringReader(_fileContentsDictionary[rootedPath]);
+            return reader.ReadAllLines();
+        }
+
+        internal void AddFile(string path, string fileContents)
+        {
+            _fileContentsDictionary.Add(path.RootedPath(_environment), fileContents);
         }
     }
 }

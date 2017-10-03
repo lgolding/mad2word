@@ -4,59 +4,96 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Mad2WordLib
 {
     public class LineSource
     {
-        private readonly string _fileName;
+        private string _filePath;
+        private string[] _lines;
+        private int _lineNumber;
+
         private readonly IFileSystem _fileSystem;
         private readonly IEnvironment _environment;
-        private readonly string[] _lines;
 
-        // The index of the next line to be retrieved from the source.
-        private int _nextIndex;
-        
-        public LineSource(TextReader reader, string fileName, IFileSystem fileSystem, IEnvironment environment)
+        private Stack<LineSourceState> _stateStack = new Stack<LineSourceState>();
+
+        public LineSource(TextReader reader, string filePath, IFileSystem fileSystem, IEnvironment environment)
         {
-            _fileName = fileName;
+            _filePath = filePath?.RootedPath(environment);
+            _lines = reader.ReadAllLines();
+            _lineNumber = 0;
+
             _fileSystem = fileSystem;
             _environment = environment;
-            var lines = new List<string>();
-
-            ReadAllLines(lines, reader, fileName);
-
-            _lines = lines.ToArray();
         }
 
-        public string FileName => _fileName;
+        public string FilePath => _filePath;
 
-        public int LineNumber => _nextIndex;
+        public int LineNumber => _lineNumber;
 
-        public bool AtEnd => _nextIndex == _lines.Length;
+        public bool AtEnd => _lineNumber == _lines.Length && !_stateStack.Any();
 
         public string[] GetAllLines()
         {
-            string[] allLines = new string[_lines.Length];
-            Array.Copy(_lines, allLines, _lines.Length);
-            return allLines;
+            var allLines = new List<string>();
+            string line;
+            while ((line = GetLine()) != null)
+            {
+                allLines.Add(line);
+            }
+
+            return allLines.ToArray();
         }
 
         public string GetLine()
         {
-            return _lines[_nextIndex++];
+            if (_lineNumber < _lines.Length)
+            {
+                string line = _lines[_lineNumber];
+                var includeDirective = IncludeDirective.CreateFrom(line);
+                if (includeDirective != null)
+                {
+                    string resolvedIncludeFilePath = ResolveIncludedFilePath(includeDirective.Path);
+
+                    // When we return from the nested file, we'll need to be pointing
+                    // at the line after the [INCLUDE] directive.
+                    ++_lineNumber;
+
+                    PushState();
+                    _filePath = resolvedIncludeFilePath;
+                    _lines = _fileSystem.ReadAllLines(_filePath);
+                    _lineNumber = 0;
+                    return GetLine();
+                }
+                else
+                {
+                    ++_lineNumber;
+                    return line;
+                }
+            }
+            else if (_stateStack.Any())
+            {
+                PopState();
+                return GetLine();
+            }
+            else
+            {
+                return null;
+            }
         }
 
-        internal string PeekLine()
+        public string PeekLine()
         {
-            return _lines[_nextIndex];
+            return _lines[_lineNumber];
         }
 
         public void Advance()
         {
-            if (_nextIndex < _lines.Length)
+            if (_lineNumber < _lines.Length)
             {
-                ++_nextIndex;
+                ++_lineNumber;
             }
             else
             {
@@ -66,9 +103,9 @@ namespace Mad2WordLib
 
         public void BackUp()
         {
-            if (_nextIndex > 0)
+            if (_lineNumber > 0)
             {
-                --_nextIndex;
+                --_lineNumber;
             }
             else
             {
@@ -76,24 +113,7 @@ namespace Mad2WordLib
             }
         }
 
-        private void ReadAllLines(List<string> lines, TextReader reader, string fileName)
-        {
-            string line;
-            while ((line = reader.ReadLine()) != null)
-            {
-                var includeDirective = IncludeDirective.CreateFrom(line);
-                if (includeDirective != null)
-                {
-                    ReadIncludedFile(includeDirective.Path, fileName, lines);
-                }
-                else
-                {
-                    lines.Add(line);
-                }
-            }
-        }
-
-        private void ReadIncludedFile(string includedFilePath, string fileName, List<string> lines)
+        private string ResolveIncludedFilePath(string includedFilePath)
         {
             if (string.IsNullOrEmpty(Path.GetExtension(includedFilePath)))
             {
@@ -116,33 +136,52 @@ namespace Mad2WordLib
             {
                 searchPaths.Add(Path.Combine(_environment.CurrentDirectory, includedFilePath));
 
-                string inputDirectory = Path.GetDirectoryName(fileName);
+                string inputDirectory = Path.GetDirectoryName(_filePath);
                 searchPaths.Add(Path.Combine(inputDirectory, includedFilePath));
             }
 
-            bool found = false;
             foreach (string searchPath in searchPaths)
             {
                 if (_fileSystem.FileExists(searchPath))
                 {
-                    using (TextReader innerReader = _fileSystem.OpenText(searchPath))
-                    {
-                        ReadAllLines(lines, innerReader, searchPath);
-                    }
-
-                    found = true;
-                    break;
+                    return searchPath;
                 }
             }
 
-            if (!found)
+            throw new MadokoReaderException(
+                StringUtil.Format(
+                    Resources.ErrorIncludeFileNotFound,
+                    includedFilePath,
+                    string.Join(", ", searchPaths)));
+        }
+
+        private void PushState()
+        {
+            _stateStack.Push(new LineSourceState(_filePath, _lines, _lineNumber));
+        }
+
+        private void PopState()
+        {
+            LineSourceState state = _stateStack.Pop();
+            _filePath = state.FileName;
+            _lines = state.Lines;
+            _lineNumber = state.LineNumber;
+        }
+
+        private class LineSourceState
+        {
+            public LineSourceState(string fileName, string[] lines, int lineNumber)
             {
-                throw new MadokoReaderException(
-                    StringUtil.Format(
-                        Resources.ErrorIncludeFileNotFound,
-                        includedFilePath,
-                        string.Join(", ", searchPaths)));
+                FileName = fileName;
+                Lines = lines;
+                LineNumber = lineNumber;
             }
+
+            public string FileName { get; }
+
+            public string[] Lines { get; }
+
+            public int LineNumber { get; }
         }
     }
 }
