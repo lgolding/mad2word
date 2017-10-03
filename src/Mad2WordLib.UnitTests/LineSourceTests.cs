@@ -24,6 +24,8 @@ How it began
 @"## Chapter 2
 How it ended";
 
+        private const string Extra = "The extra content";
+
         private readonly string[] AllLines = new[]
         {
             "# Top-level document",
@@ -34,8 +36,6 @@ How it ended";
             "How it ended",
             "The end"
         };
-
-    private const string Extra = "The extra content";
 
         [Fact(DisplayName = nameof(LineSource_reads_includes))]
         public void LineSource_reads_includes()
@@ -137,6 +137,33 @@ How it ended";
             line.Should().Be(AllLines[6]);
             lineSource.LineNumber.Should().Be(4);
             lineSource.FilePath.Should().Be(Path.Combine(FakeEnvironment.DefaultWorkingDirectory, "document.mdk"));
+        }
+
+        [Fact(DisplayName = nameof(LineSource_Peek_looks_past_the_end_of_an_included_file))]
+        public void LineSource_Peek_looks_past_the_end_of_an_included_file()
+        {
+            var environment = new FakeEnvironment();
+            var fileSystem = new FakeFileSystem(environment);
+            fileSystem.AddFile("document.mdk", Document);
+            fileSystem.AddFile("Chapter1.mdk", Chapter1);
+            fileSystem.AddFile("Chapter2.mdk", Chapter2);
+            fileSystem.AddFile("Extra.mdk", Extra);
+
+            const string InputPath = "document.mdk";
+            TextReader reader = fileSystem.OpenText(InputPath);
+            var lineSource = new LineSource(reader, InputPath, fileSystem, environment);
+
+            lineSource.GetLine();   // "# Top-level document"
+            lineSource.GetLine();   // "## Chapter 1",
+            lineSource.GetLine();   // "How it began"
+            lineSource.GetLine();   // "The extra content"
+
+            // We're now positioned on the last (and only) line of Extra.mdk, which in turn
+            // is included on the last line of Chapter1.mdk. PeekLine should see the first line
+            // of Chapter2.mdk.
+            string result = lineSource.PeekLine();
+            
+            result.Should().Be("## Chapter 2");
         }
     }
 }

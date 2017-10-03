@@ -17,7 +17,7 @@ namespace Mad2WordLib
         private readonly IFileSystem _fileSystem;
         private readonly IEnvironment _environment;
 
-        private Stack<LineSourceState> _stateStack = new Stack<LineSourceState>();
+        private List<LineSourceState> _stateStack = new List<LineSourceState>();
 
         public LineSource(TextReader reader, string filePath, IFileSystem fileSystem, IEnvironment environment)
         {
@@ -86,7 +86,29 @@ namespace Mad2WordLib
 
         public string PeekLine()
         {
-            return _lines[_lineNumber];
+            string[] lines = _lines;
+            int lineNumber = _lineNumber;
+            int stackPosition = _stateStack.Count - 1;
+
+            // Look past the end of any included files we are currently positioned at the end of.
+            while (lineNumber >= lines.Length && stackPosition >= 0)
+            {
+                LineSourceState state = _stateStack[stackPosition--];
+                lines = state.Lines;
+                lineNumber = state.LineNumber;
+            }
+
+            // Having found the next line, if it's an INCLUDE directive, look
+            // into it.
+            string line = lines[lineNumber];
+            IncludeDirective includeDirective;
+            while ((includeDirective = IncludeDirective.CreateFrom(line)) != null)
+            {
+                string resolvedIncludeFilePath = ResolveIncludedFilePath(includeDirective.Path);
+                line = _fileSystem.OpenText(resolvedIncludeFilePath).ReadLine();
+            }
+
+            return line;
         }
 
         public void Advance()
@@ -157,15 +179,17 @@ namespace Mad2WordLib
 
         private void PushState()
         {
-            _stateStack.Push(new LineSourceState(_filePath, _lines, _lineNumber));
+            _stateStack.Add(new LineSourceState(_filePath, _lines, _lineNumber));
         }
 
         private void PopState()
         {
-            LineSourceState state = _stateStack.Pop();
+            LineSourceState state = _stateStack.Last();
             _filePath = state.FileName;
             _lines = state.Lines;
             _lineNumber = state.LineNumber;
+
+            _stateStack.Remove(_stateStack.Last());
         }
 
         private class LineSourceState
