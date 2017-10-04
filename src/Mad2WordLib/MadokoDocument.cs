@@ -12,7 +12,7 @@ namespace Mad2WordLib
     {
         public static MadokoDocument Read(string inputPath, IFileSystem fileSystem, IEnvironment environment)
         {
-            using (var reader = new StreamReader(File.OpenRead(inputPath)))
+            using (var reader = new StreamReader(fileSystem.OpenRead(inputPath)))
             {
                 return Read(reader, fileSystem, environment, inputPath);
             }
@@ -20,6 +20,8 @@ namespace Mad2WordLib
 
         internal static MadokoDocument Read(TextReader reader, IFileSystem fileSystem, IEnvironment environment, string inputPath)
         {
+            var headingNumbers = new int[MadokoHeading.MaxDepth];
+
             var document = new MadokoDocument();
             var errors = new List<MadokoParserException>();
 
@@ -39,7 +41,7 @@ namespace Mad2WordLib
                     string nextLine = lineSource.PeekLine();
                     if (MadokoHeading.MatchesLine(nextLine))
                     {
-                        document.Blocks.Add(new MadokoHeading(lineSource));
+                        document.Blocks.Add(new MadokoHeading(lineSource, headingNumbers));
                     }
                     else if (MadokoBulletListItem.MatchesLine(nextLine))
                     {

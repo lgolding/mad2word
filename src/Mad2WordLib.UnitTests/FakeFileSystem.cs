@@ -17,24 +17,22 @@ namespace Mad2WordLib.UnitTests
             _fileContentsDictionary = new Dictionary<string, string>();
         }
 
-        public bool FileExists(string path)
-        {
-            return _fileContentsDictionary.ContainsKey(path.RootedPath(_environment));
-        }
+        public bool FileExists(string path) =>
+            _fileContentsDictionary.ContainsKey(path.RootedPath(_environment));
 
-        public TextReader OpenText(string path)
-        {
-            string rootedPath = path.RootedPath(_environment);
+        public TextReader OpenText(string path) =>
+            new StringReader(_fileContentsDictionary[GetRootedPath(path)]);
 
-            if (!FileExists(rootedPath))
-            {
-                throw new FileNotFoundException("The specified file was not found: " + rootedPath, rootedPath);
-            }
+        public string[] ReadAllLines(string path) =>
+            OpenText(path).ReadAllLines();
 
-            return new StringReader(_fileContentsDictionary[rootedPath]);
-        }
+        internal void AddFile(string path, string contents) =>
+            _fileContentsDictionary.Add(path.RootedPath(_environment), contents);
 
-        public string[] ReadAllLines(string path)
+        public Stream OpenRead(string path) =>
+            _fileContentsDictionary[GetRootedPath(path)].ToStream();
+
+        private string GetRootedPath(string path)
         {
             string rootedPath = path.RootedPath(_environment);
 
@@ -43,13 +41,7 @@ namespace Mad2WordLib.UnitTests
                 throw new FileNotFoundException("The specified file was not found: " + rootedPath, rootedPath);
             }
 
-            var reader = new StringReader(_fileContentsDictionary[rootedPath]);
-            return reader.ReadAllLines();
-        }
-
-        internal void AddFile(string path, string fileContents)
-        {
-            _fileContentsDictionary.Add(path.RootedPath(_environment), fileContents);
+            return rootedPath;
         }
     }
 }

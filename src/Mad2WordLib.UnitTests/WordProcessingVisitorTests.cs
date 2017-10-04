@@ -10,8 +10,8 @@ namespace Mad2WordLib.UnitTests
 {
     public class WordProcessingVisitorTests : MadokoTestBase
     {
-        [Fact(DisplayName = nameof(WordProcessingVisitor_FormatsCodeRun))]
-        public void WordProcessingVisitor_FormatsCodeRun()
+        [Fact(DisplayName = nameof(WordProcessingVisitor_formats_code_run))]
+        public void WordProcessingVisitor_formats_code_run()
         {
             var body = new Body();
             var target = new WordProcessingVisitor(body);
@@ -44,22 +44,22 @@ namespace Mad2WordLib.UnitTests
             text.InnerText.Should().Be("f()");
         }
 
-        [Fact(DisplayName = nameof(WordProcessingVisitor_FormatsHeading))]
-        public void WordProcessingVisitor_FormatsHeading()
+        [Fact(DisplayName = nameof(WordProcessingVisitor_formats_heading))]
+        public void WordProcessingVisitor_formats_heading()
         {
             var body = new Body();
             var target = new WordProcessingVisitor(body);
 
             LineSource lineSource = MakeLineSource("## abc");
-            MadokoHeading madokoHeading = new MadokoHeading(lineSource);
+            MadokoHeading madokoHeading = new MadokoHeading(lineSource, new int[MadokoHeading.MaxDepth]);
 
             target.Visit(madokoHeading);
 
             VerifySingleParagraphFormatting(body, "Heading2", "abc");
         }
 
-        [Fact(DisplayName = nameof(WordProcessingVisitor_FormatsTitle))]
-        public void WordProcessingVisitor_FormatsTitle()
+        [Fact(DisplayName = nameof(WordProcessingVisitor_formats_title))]
+        public void WordProcessingVisitor_formats_title()
         {
             var body = new Body();
             var target = new WordProcessingVisitor(body);

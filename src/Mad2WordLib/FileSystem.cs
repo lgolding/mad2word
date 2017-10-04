@@ -12,6 +12,11 @@ namespace Mad2WordLib
             return File.Exists(path);
         }
 
+        public Stream OpenRead(string path)
+        {
+            return File.OpenRead(path);
+        }
+
         public TextReader OpenText(string path)
         {
             return File.OpenText(path);

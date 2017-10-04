@@ -9,6 +9,8 @@ namespace Mad2WordLib
     {
         bool FileExists(string path);
 
+        Stream OpenRead(string path);
+
         TextReader OpenText(string path);
 
         string[] ReadAllLines(string path);

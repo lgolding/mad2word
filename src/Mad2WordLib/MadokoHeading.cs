@@ -12,7 +12,9 @@ namespace Mad2WordLib
             @"^(?<level>#+)\s*(?<text>[^{]*)({\s*(?<attributes>[^}]*)})?\s*$",
             RegexOptions.Compiled);
 
-        public MadokoHeading(LineSource lineSource)
+        public const int MaxDepth = 10;
+
+        public MadokoHeading(LineSource lineSource, int[] headingNumbers)
         {
             string line = lineSource.PeekLine();
             Match match = s_headingPattern.Match(line);
@@ -30,11 +32,16 @@ namespace Mad2WordLib
             Level = match.Groups["level"].Value.Length;
             Attributes = MadokoAttribute.Parse(match.Groups["attributes"].Value);
 
+            Numbers = new int[Level];
+            ++headingNumbers[Level - 1];
+            Array.Copy(headingNumbers, Numbers, Level);
+
             string text = match.Groups["text"].Value.Trim();
             Runs.AddRange(MadokoLine.Parse(text));
         }
 
         public int Level { get; }
+        public int[] Numbers { get; internal set; }
 
         public static bool MatchesLine(string line)
         {

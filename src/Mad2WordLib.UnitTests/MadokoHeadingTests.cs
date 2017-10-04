@@ -155,6 +155,53 @@ Some thoughts
                 });
         }
 
+        private class HeadingVisitor : TestVisitorBase
+        {
+            private List<MadokoHeading> _headings = new List<MadokoHeading>();
+
+            public override void Visit(MadokoHeading heading)
+            {
+                _headings.Add(heading);
+            }
+
+            internal MadokoHeading[] Headings => _headings.ToArray();
+        }
+
+        [Fact(DisplayName = nameof(MadokoHeading_assigns_heading_numbers_to_top_level_headings))]
+        public void MadokoHeading_assigns_heading_numbers_to_top_level_headings()
+        {
+            const string InputPath = @"C:\docs\test.mdk";
+            const string Contents =
+@"
+# Chapter 1
+Text
+
+# Chapter 2
+More text
+";
+
+            var environment = new FakeEnvironment();
+            var fileSystem = new FakeFileSystem(environment);
+            fileSystem.AddFile(InputPath, Contents);
+
+            MadokoDocument document = MadokoDocument.Read(InputPath, fileSystem, environment);
+
+            var visitor = new HeadingVisitor();
+
+            foreach (MadokoBlock madokoBlock in document.Blocks)
+            {
+                madokoBlock.Accept(visitor);
+            }
+
+            visitor.Headings.Length.Should().Be(2);
+
+            visitor.Headings[0].Numbers.Length.Should().Be(1);
+            visitor.Headings[0].Numbers[0].Should().Be(1);
+
+            visitor.Headings[1].Numbers.Length.Should().Be(1);
+            visitor.Headings[1].Numbers[0].Should().Be(2);
+        }
+
         private void SingleRunTestCase(string line, int expectedLevel, string expectedText, IDictionary<string, MadokoAttribute> expectedAttributes = null)
         {
             MadokoHeading madokoHeading = MakeHeading(line);
@@ -185,7 +232,7 @@ Some thoughts
             using (TextReader reader = new StringReader(input))
             {
                 var lineSource = new LineSource(reader, null, fileSystem, environment);
-                heading = new MadokoHeading(lineSource);
+                heading = new MadokoHeading(lineSource, new int[MadokoHeading.MaxDepth]);
             }
 
             return heading;
