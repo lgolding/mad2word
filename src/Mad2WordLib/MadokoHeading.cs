@@ -14,7 +14,7 @@ namespace Mad2WordLib
 
         public const int MaxDepth = 10;
 
-        public MadokoHeading(LineSource lineSource, int[] headingNumbers)
+        public MadokoHeading(LineSource lineSource, int[] headingCounters)
         {
             string line = lineSource.PeekLine();
             Match match = s_headingPattern.Match(line);
@@ -32,12 +32,24 @@ namespace Mad2WordLib
             Level = match.Groups["level"].Value.Length;
             Attributes = MadokoAttribute.Parse(match.Groups["attributes"].Value);
 
+            UpdateHeadingCounters(headingCounters);
+
             Numbers = new int[Level];
-            ++headingNumbers[Level - 1];
-            Array.Copy(headingNumbers, Numbers, Level);
+            Array.Copy(headingCounters, Numbers, Level);
 
             string text = match.Groups["text"].Value.Trim();
             Runs.AddRange(MadokoLine.Parse(text));
+        }
+
+        // Increment the heading counter for the current level, and reset
+        // the counters for all lower levels.
+        private void UpdateHeadingCounters(int[] headingCounters)
+        {
+            ++headingCounters[Level - 1];
+            for (int i = Level; i < MaxDepth; ++i)
+            {
+                headingCounters[i] = 0;
+            }
         }
 
         public int Level { get; }

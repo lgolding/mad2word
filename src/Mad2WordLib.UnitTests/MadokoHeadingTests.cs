@@ -167,8 +167,8 @@ Some thoughts
             internal MadokoHeading[] Headings => _headings.ToArray();
         }
 
-        [Fact(DisplayName = nameof(MadokoHeading_assigns_heading_numbers_to_top_level_headings))]
-        public void MadokoHeading_assigns_heading_numbers_to_top_level_headings()
+        [Fact(DisplayName = nameof(MadokoHeading_assigns_heading_numbers_to_headings))]
+        public void MadokoHeading_assigns_heading_numbers_to_headings()
         {
             const string InputPath = @"C:\docs\test.mdk";
             const string Contents =
@@ -176,8 +176,16 @@ Some thoughts
 # Chapter 1
 Text
 
+## Section 1.1
+### Section 1.1.1
+### Section 1.1.2
+## Section 1.2
+### Section 1.2.1
+
 # Chapter 2
 More text
+## Section 2.1
+### Section 2.1.1
 ";
 
             var environment = new FakeEnvironment();
@@ -193,13 +201,45 @@ More text
                 madokoBlock.Accept(visitor);
             }
 
-            visitor.Headings.Length.Should().Be(2);
+            visitor.Headings.Length.Should().Be(9);
 
             visitor.Headings[0].Numbers.Length.Should().Be(1);
             visitor.Headings[0].Numbers[0].Should().Be(1);
 
-            visitor.Headings[1].Numbers.Length.Should().Be(1);
-            visitor.Headings[1].Numbers[0].Should().Be(2);
+            visitor.Headings[1].Numbers.Length.Should().Be(2);
+            visitor.Headings[1].Numbers[0].Should().Be(1);
+            visitor.Headings[1].Numbers[1].Should().Be(1);
+
+            visitor.Headings[2].Numbers.Length.Should().Be(3);
+            visitor.Headings[2].Numbers[0].Should().Be(1);
+            visitor.Headings[2].Numbers[1].Should().Be(1);
+            visitor.Headings[2].Numbers[2].Should().Be(1);
+
+            visitor.Headings[3].Numbers.Length.Should().Be(3);
+            visitor.Headings[3].Numbers[0].Should().Be(1);
+            visitor.Headings[3].Numbers[1].Should().Be(1);
+            visitor.Headings[3].Numbers[2].Should().Be(2);
+
+            visitor.Headings[4].Numbers.Length.Should().Be(2);
+            visitor.Headings[4].Numbers[0].Should().Be(1);
+            visitor.Headings[4].Numbers[1].Should().Be(2);
+
+            visitor.Headings[5].Numbers.Length.Should().Be(3);
+            visitor.Headings[5].Numbers[0].Should().Be(1);
+            visitor.Headings[5].Numbers[1].Should().Be(2);
+            visitor.Headings[5].Numbers[2].Should().Be(1);
+
+            visitor.Headings[6].Numbers.Length.Should().Be(1);
+            visitor.Headings[6].Numbers[0].Should().Be(2);
+
+            visitor.Headings[7].Numbers.Length.Should().Be(2);
+            visitor.Headings[7].Numbers[0].Should().Be(2);
+            visitor.Headings[7].Numbers[1].Should().Be(1);
+
+            visitor.Headings[8].Numbers.Length.Should().Be(3);
+            visitor.Headings[8].Numbers[0].Should().Be(2);
+            visitor.Headings[8].Numbers[1].Should().Be(1);
+            visitor.Headings[8].Numbers[2].Should().Be(1);
         }
 
         private void SingleRunTestCase(string line, int expectedLevel, string expectedText, IDictionary<string, MadokoAttribute> expectedAttributes = null)

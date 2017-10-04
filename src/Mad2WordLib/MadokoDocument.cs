@@ -20,7 +20,7 @@ namespace Mad2WordLib
 
         internal static MadokoDocument Read(TextReader reader, IFileSystem fileSystem, IEnvironment environment, string inputPath)
         {
-            var headingNumbers = new int[MadokoHeading.MaxDepth];
+            var headingCounters = new int[MadokoHeading.MaxDepth];
 
             var document = new MadokoDocument();
             var errors = new List<MadokoParserException>();
@@ -41,7 +41,7 @@ namespace Mad2WordLib
                     string nextLine = lineSource.PeekLine();
                     if (MadokoHeading.MatchesLine(nextLine))
                     {
-                        document.Blocks.Add(new MadokoHeading(lineSource, headingNumbers));
+                        document.Blocks.Add(new MadokoHeading(lineSource, headingCounters));
                     }
                     else if (MadokoBulletListItem.MatchesLine(nextLine))
                     {
